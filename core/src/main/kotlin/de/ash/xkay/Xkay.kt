@@ -15,6 +15,7 @@ import de.ash.xkay.assets.get
 import de.ash.xkay.ecs.systems.InputSystem
 import de.ash.xkay.ecs.systems.MovementSystem
 import de.ash.xkay.ecs.systems.RenderSystem
+import de.ash.xkay.events.GameEventManager
 import de.ash.xkay.screens.LoadingScreen
 import de.ash.xkay.screens.XkayScreen
 import ktx.app.KtxGame
@@ -38,6 +39,10 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
     val gameViewport by lazy { FitViewport(9f, 16f) }
     val gameCamera by lazy { gameViewport.camera as OrthographicCamera }
 
+    val uiViewport by lazy { FitViewport(144f, 256f) }
+
+    val eventManager = GameEventManager()
+
     val assets: AssetStorage by lazy {
         KtxAsync.initiate()
         AssetStorage()
@@ -48,8 +53,13 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
     val engine: Engine by lazy {
         PooledEngine().apply {
             addSystem(InputSystem(gameViewport))
-            addSystem(MovementSystem())
-            addSystem(RenderSystem(batch, gameViewport, assets[TextureAsset.SPACE_BACKGROUND]))
+            addSystem(MovementSystem(gameViewport))
+            addSystem(RenderSystem(
+                batch,
+                gameViewport,
+                uiViewport,
+                assets[TextureAsset.SPACE_BACKGROUND])
+            )
             addSystem(RemoveSystem())
         }
     }

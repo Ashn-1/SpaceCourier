@@ -16,6 +16,7 @@ import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.graphics.use
 import ktx.log.debug
+import kotlin.math.min
 
 /**
  * @since 0.1
@@ -25,10 +26,12 @@ class IngameScreen(game: Xkay) : XkayScreen(game) {
 
     private val logger = ashLogger("Ingame")
 
-    val engine = game.engine
-    val gameCamera = game.gameCamera
+    /**
+     * The maximum delta time that will be used to update the game. This ensures that delta dependent logic will not jump due to lag (i.e. big delta values) or in case low framerates occur.
+     */
+    private val maxDeltaTime = 1 / 20f
 
-    val shapeRenderer = ShapeRenderer()
+    private val engine = game.engine
 
     override fun show() {
         logger.debug { "Ingame entered" }
@@ -36,21 +39,18 @@ class IngameScreen(game: Xkay) : XkayScreen(game) {
 
     val player: Entity = engine.entity {
         with<PlayerComponent>()
-        with<TransformComponent>()
+        with<TransformComponent>().apply {
+            setInitialPosition(gameViewport.worldWidth * 0.5f, gameViewport.worldHeight * 0.25f)
+        }
         with<VelocityComponent>()
         with<GraphicComponent>().apply {
             setSprite(assets[TextureAsset.PLAYER_BASE_SHIP])
         }
     }
 
-    override fun resize(width: Int, height: Int) {
-        game.gameViewport.update(width, height)
-    }
-
     override fun render(delta: Float) {
         game.gameViewport.apply(true)
-
-        engine.update(delta)
+        engine.update(min(delta, maxDeltaTime))
     }
 
     override fun dispose() {

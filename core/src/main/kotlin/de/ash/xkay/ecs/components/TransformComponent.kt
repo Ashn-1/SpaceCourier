@@ -13,9 +13,19 @@ import javax.xml.crypto.dsig.Transform
 class TransformComponent : Component, Pool.Poolable, Comparable<TransformComponent> {
 
     val position = Vector2()
+    val prevPosition = Vector2()
+    val interpolatedPosition = Vector2()
 
     override fun reset() {
         position.set(Vector2.Zero)
+        prevPosition.set(Vector2.Zero)
+        interpolatedPosition.set(Vector2.Zero)
+    }
+
+    fun setInitialPosition(x: Float, y: Float) {
+        position.set(x, y)
+        prevPosition.set(x, y)
+        interpolatedPosition.set(x, y)
     }
 
     override fun compareTo(other: TransformComponent): Int {
@@ -25,6 +35,4 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     companion object {
         val mapper = mapperFor<TransformComponent>()
     }
-
-
 }

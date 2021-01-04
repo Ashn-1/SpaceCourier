@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.Xkay
 import de.ash.xkay.XkayRuntimeException
@@ -28,6 +29,7 @@ import ktx.log.debug
 class RenderSystem(
     private val batch: SpriteBatch,
     private val gameViewport: Viewport,
+    private val uiViewport: Viewport,
     backgroundTexture: Texture
 ) : SortedIteratingSystem(
     allOf(TransformComponent::class, GraphicComponent::class).exclude(RemoveComponent::class).get(),
@@ -36,31 +38,34 @@ class RenderSystem(
 
     private val logger = ashLogger("RenderSys")
 
-    private val backgroundScrollSpeed = 2f
+    private val backgroundScrollSpeed = 0.10f
 
-    private val backgroundSprite = Sprite(backgroundTexture).apply {
-        setSize(texture.width * Xkay.UNIT_SCALE, texture.height * Xkay.UNIT_SCALE)
-        y = -MathUtils.random(height)
+    private val backgroundSprite = Sprite(backgroundTexture.apply {
+        setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+    }).apply {
+        //setSize(texture.width * Xkay.UNIT_SCALE, texture.height * Xkay.UNIT_SCALE)
+        //y = -MathUtils.random(height)
     }
 
     override fun update(deltaTime: Float) {
 
+        // Use UI view for larger things like UI and background
+        uiViewport.apply()
+        batch.use(uiViewport.camera) {
+            // Scroll the background and render it
+            backgroundSprite.run {
+                scroll(0f, -backgroundScrollSpeed * deltaTime)
+                draw(batch)
+            }
+        }
+
         // Force sorting on next updates
         forceSort()
 
-        // Set gameview (and update camera)
-        gameViewport.apply(true)
+        // Use game viewport for small entities
+        gameViewport.apply()
 
         batch.use(gameViewport.camera) {
-
-            // Scroll the background and render it
-            backgroundSprite.run {
-                // FIXME transition from end of background to beginning is not correct
-                y -= backgroundScrollSpeed * deltaTime
-                if (y < -backgroundSprite.height + gameViewport.worldHeight) y = 0f
-                draw(batch)
-            }
-
             // Render entities
             super.update(deltaTime)
         }
@@ -80,7 +85,7 @@ class RenderSystem(
 
         // Update the sprite transform
         graphic.sprite.run {
-            setCenter(transform.position.x, transform.position.y)
+            setCenter(transform.interpolatedPosition.x, transform.interpolatedPosition.y)
             draw(batch)
         }
     }
