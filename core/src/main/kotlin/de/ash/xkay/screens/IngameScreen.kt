@@ -1,20 +1,14 @@
 package de.ash.xkay.screens
 
-import ashutils.ktx.AshKtxLogger
 import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import de.ash.xkay.Xkay
-import de.ash.xkay.assets.TextureAsset
-import de.ash.xkay.assets.get
-import de.ash.xkay.ecs.components.GraphicComponent
-import de.ash.xkay.ecs.components.PlayerComponent
-import de.ash.xkay.ecs.components.TransformComponent
-import de.ash.xkay.ecs.components.VelocityComponent
-import ktx.ashley.entity
-import ktx.ashley.with
-import ktx.graphics.use
+import de.ash.xkay.ecs.createPlayer
+import de.ash.xkay.events.GameEvent
+import de.ash.xkay.events.GameEventListener
 import ktx.log.debug
 import kotlin.math.min
 
@@ -22,7 +16,7 @@ import kotlin.math.min
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-class IngameScreen(game: Xkay) : XkayScreen(game) {
+class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
     private val logger = ashLogger("Ingame")
 
@@ -33,24 +27,39 @@ class IngameScreen(game: Xkay) : XkayScreen(game) {
 
     private val engine = game.engine
 
-    override fun show() {
-        logger.debug { "Ingame entered" }
-    }
+    private var isGameOver = false
 
-    val player: Entity = engine.entity {
-        with<PlayerComponent>()
-        with<TransformComponent>().apply {
-            setInitialPosition(gameViewport.worldWidth * 0.5f, gameViewport.worldHeight * 0.25f)
-        }
-        with<VelocityComponent>()
-        with<GraphicComponent>().apply {
-            setSprite(assets[TextureAsset.PLAYER_BASE_SHIP])
-        }
+    override fun show() {
+        eventManager.register(GameEvent.PlayerDeathEvent::class, this)
+        reset()
+
+        logger.debug { "Ingame entered" }
     }
 
     override fun render(delta: Float) {
         game.gameViewport.apply(true)
         engine.update(min(delta, maxDeltaTime))
+
+        if (isGameOver && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            reset()
+        }
+    }
+
+    private fun reset() {
+        engine.removeAllEntities()
+        engine.createPlayer(assets, gameViewport)
+
+        logger.debug { "Game was reset" }
+    }
+
+    override fun onEvent(gameEvent: GameEvent) {
+        when (gameEvent) {
+            is GameEvent.PlayerDeathEvent -> {
+                logger.debug { "Game over with highscore ${gameEvent.highscore}" }
+                isGameOver = true
+            }
+            else -> {}
+        }
     }
 
     override fun dispose() {

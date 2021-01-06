@@ -1,20 +1,17 @@
 package de.ash.xkay
 
 import ashutils.ktx.ashLogger
-import de.ash.xkay.ecs.systems.RemoveSystem
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.assets.TextureAsset
 import de.ash.xkay.assets.get
-import de.ash.xkay.ecs.systems.InputSystem
-import de.ash.xkay.ecs.systems.MovementSystem
-import de.ash.xkay.ecs.systems.RenderSystem
+import de.ash.xkay.ecs.systems.*
 import de.ash.xkay.events.GameEventManager
 import de.ash.xkay.screens.LoadingScreen
 import de.ash.xkay.screens.XkayScreen
@@ -22,7 +19,6 @@ import ktx.app.KtxGame
 import ktx.app.clearScreen
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
-import ktx.graphics.center
 import ktx.log.debug
 import ktx.log.info
 
@@ -49,18 +45,24 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
     }
 
     val batch: SpriteBatch by lazy { SpriteBatch() }
+    val shapeRenderer: ShapeRenderer by lazy { ShapeRenderer() }
 
     val engine: Engine by lazy {
         PooledEngine().apply {
             addSystem(InputSystem(gameViewport))
+            addSystem(ObstacleSpawnSystem(assets, gameViewport))
             addSystem(MovementSystem(gameViewport))
+            addSystem(CollisionSystem(assets))
             addSystem(RenderSystem(
-                batch,
-                gameViewport,
-                uiViewport,
-                assets[TextureAsset.SPACE_BACKGROUND])
+                    batch,
+                    shapeRenderer,
+                    gameViewport,
+                    uiViewport,
+                    assets[TextureAsset.SPACE_BACKGROUND],
+                    isDebug = false
+                )
             )
-            addSystem(RemoveSystem())
+            addSystem(RemoveSystem(eventManager))
         }
     }
 

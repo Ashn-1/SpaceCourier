@@ -6,10 +6,10 @@ package de.ash.xkay.events
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-interface EventListener {
+interface GameEventListener {
 
     /**
-     * Called when an [event] is dispatched that the listener subclass registered for.
+     * Called when an [gameEvent] is dispatched that the listener subclass registered for.
      */
-    fun onEvent(event: AshEvent)
+    fun onEvent(gameEvent: GameEvent)
 }

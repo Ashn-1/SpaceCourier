@@ -1,5 +1,6 @@
 package de.ash.xkay.ecs.systems
 
+import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.MathUtils
@@ -16,7 +17,7 @@ import ktx.math.plusAssign
  * @author Cpt-Ash (Ahmad Haidari)
  */
 class MovementSystem(
-    gameViewport: Viewport
+    private val gameViewport: Viewport
 ) : IteratingSystem(
     allOf(TransformComponent::class, VelocityComponent::class)
         .exclude(RemoveComponent::class)
@@ -26,9 +27,7 @@ class MovementSystem(
     // UPS for the movement system are set to 30
     private val updateRate = 1 / 30f
 
-    // Left and right boundaries for player movement
-    private val playerLeftBound = 0.5f
-    private val playerRightBound = gameViewport.worldWidth - 0.5f
+    private val pointsPerSecond = 50f
 
     private var accumulator = 0f
 
@@ -68,8 +67,21 @@ class MovementSystem(
         // Update the position based on the velocity
         transform.position.mulAdd(velocity.velocity, deltaTime)
 
-        if (entity[PlayerComponent.mapper] != null) {
-            transform.position.x = MathUtils.clamp(transform.position.x, playerLeftBound, playerRightBound)
+        // Player entity needs some special handling
+        entity[PlayerComponent.mapper]?.let { // if not null
+
+            // Clamp the player position so he doesn't go out of bounds
+            transform.position.x = MathUtils.clamp(
+                transform.position.x,
+                0f + transform.size.x / 2f,
+                gameViewport.worldWidth - transform.size.x / 2f
+            )
+
+            // Increase player highscore
+            it.highscore += (pointsPerSecond * deltaTime)
         }
+
+        // Update hitbox positions if available
+        entity[HitboxComponent.mapper]?.hitbox?.setPosition(transform.position)
     }
 }

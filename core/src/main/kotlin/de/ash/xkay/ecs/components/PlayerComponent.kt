@@ -10,9 +10,10 @@ import ktx.ashley.mapperFor
  */
 class PlayerComponent : Component, Pool.Poolable {
 
-
+    var highscore: Float = 0f
 
     override fun reset() {
+        highscore = 0f
     }
 
     companion object {

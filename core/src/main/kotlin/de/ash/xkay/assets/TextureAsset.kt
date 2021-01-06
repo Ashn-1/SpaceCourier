@@ -22,7 +22,12 @@ enum class TextureAsset(
 ) {
 
     PLAYER_BASE_SHIP("ship.png", "textures"),
-    SPACE_BACKGROUND("background.png", "textures")
+
+    ASTEROID_BASIC("asteroid_basic.png", "textures"),
+
+    EXPLOSION("explosion.png", "textures"),
+
+    SPACE_BACKGROUND("background.png", "textures"),
 
 }
 

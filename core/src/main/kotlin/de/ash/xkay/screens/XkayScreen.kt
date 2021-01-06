@@ -12,6 +12,7 @@ open class XkayScreen(val game: Xkay) : KtxScreen {
     val batch = game.batch
     val gameViewport = game.gameViewport
     val uiViewport = game.uiViewport
+    val eventManager = game.eventManager
 
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width, height, true)

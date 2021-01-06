@@ -4,18 +4,22 @@ import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.Xkay
 import de.ash.xkay.XkayRuntimeException
 import de.ash.xkay.ecs.components.GraphicComponent
+import de.ash.xkay.ecs.components.HitboxComponent
 import de.ash.xkay.ecs.components.RemoveComponent
 import de.ash.xkay.ecs.components.TransformComponent
+import de.ash.xkay.extensions.circle
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
@@ -28,17 +32,19 @@ import ktx.log.debug
  */
 class RenderSystem(
     private val batch: SpriteBatch,
+    private val shapeRenderer: ShapeRenderer,
     private val gameViewport: Viewport,
     private val uiViewport: Viewport,
-    backgroundTexture: Texture
+    backgroundTexture: Texture,
+    var isDebug: Boolean = false
 ) : SortedIteratingSystem(
-    allOf(TransformComponent::class, GraphicComponent::class).exclude(RemoveComponent::class).get(),
+    allOf(TransformComponent::class, GraphicComponent::class).get(),
     compareBy { entity -> entity[TransformComponent.mapper] }
 ) {
 
     private val logger = ashLogger("RenderSys")
 
-    private val backgroundScrollSpeed = 0.10f
+    private val backgroundScrollSpeed = 0.01f
 
     private val backgroundSprite = Sprite(backgroundTexture.apply {
         setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
@@ -64,10 +70,20 @@ class RenderSystem(
 
         // Use game viewport for small entities
         gameViewport.apply()
-
         batch.use(gameViewport.camera) {
             // Render entities
             super.update(deltaTime)
+        }
+
+        if (isDebug) {
+            shapeRenderer.color = Color.MAGENTA
+            shapeRenderer.use(ShapeRenderer.ShapeType.Line, gameViewport.camera) { shaper ->
+                for (entity in entities) {
+                    entity[HitboxComponent.mapper]?.let { hitbox ->
+                        shaper.circle(hitbox.hitbox)
+                    }
+                }
+            }
         }
     }
 
@@ -86,6 +102,8 @@ class RenderSystem(
         // Update the sprite transform
         graphic.sprite.run {
             setCenter(transform.interpolatedPosition.x, transform.interpolatedPosition.y)
+            setSize(transform.size.x, transform.size.y)
+            rotation = transform.rotationDeg
             draw(batch)
         }
     }
