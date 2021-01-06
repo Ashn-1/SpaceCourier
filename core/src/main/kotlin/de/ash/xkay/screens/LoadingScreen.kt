@@ -35,6 +35,7 @@ import ktx.actors.*
 class LoadingScreen(game: Xkay) : XkayScreen(game) {
 
     private lateinit var progressBarTexture: Image
+    private lateinit var progressBarLabel: Label
     private lateinit var touchToStart: Label
 
     private val logger = ashLogger("LoadingState")
@@ -95,7 +96,7 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
                     progressBarTexture = image("loading_bar").apply {
                         scaleX = 0f
                     }
-                    label("Loading...", LabelStyles.DEFAULT.name) {
+                    progressBarLabel = label("Loading...", LabelStyles.DEFAULT.name) {
                         setAlignment(Align.center)
                     }
                     cell.padLeft(5f).padRight(5f)
@@ -122,6 +123,7 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
         }
 
         progressBarTexture.scaleX = assets.progress.percent
+        progressBarLabel.setText("${assets.progress.percent * 100} %")
 
         stage.run {
             viewport.apply()
