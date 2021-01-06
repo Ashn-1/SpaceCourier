@@ -53,8 +53,8 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
         val assetRefs = gdxArrayOf(
             TextureAsset.values().map { assets.loadAsync(it.descriptor) },
             TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) },
-            MusicAsset.values().map { assets.loadAsync(it.descriptor) },
-            SoundAsset.values().map { assets.loadAsync(it.descriptor) }
+            SoundAsset.values().map { assets.loadAsync(it.descriptor) },
+            MusicAsset.values().map { assets.loadAsync(it.descriptor) }
         ).flatten()
 
         // Launch coroutine to load all the assets

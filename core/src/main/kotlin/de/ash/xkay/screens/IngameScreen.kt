@@ -3,6 +3,7 @@ package de.ash.xkay.screens
 import ashutils.ktx.ashLogger
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import de.ash.xkay.assets.MusicAsset
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.events.GameEvent
@@ -59,7 +60,6 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
                 logger.debug { "Game over with highscore ${gameEvent.highscore}" }
                 isGameOver = true
             }
-            else -> {}
         }
     }
 

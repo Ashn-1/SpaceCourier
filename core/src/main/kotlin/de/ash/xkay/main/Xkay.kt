@@ -14,6 +14,8 @@ import de.ash.xkay.assets.BitmapFontAsset
 import de.ash.xkay.assets.TextureAsset
 import de.ash.xkay.assets.TextureAtlasAsset
 import de.ash.xkay.assets.get
+import de.ash.xkay.audio.AudioService
+import de.ash.xkay.audio.DefaultAudioService
 import de.ash.xkay.ecs.systems.*
 import de.ash.xkay.events.GameEventManager
 import de.ash.xkay.screens.LoadingScreen
@@ -61,6 +63,8 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
         KtxAsync.initiate()
         AssetStorage()
     }
+
+    val audioService: AudioService by lazy { DefaultAudioService(assets) }
 
     val engine: Engine by lazy {
         PooledEngine().apply {

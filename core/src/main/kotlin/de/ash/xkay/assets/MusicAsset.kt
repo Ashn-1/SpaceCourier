@@ -17,7 +17,7 @@ import ktx.assets.async.AssetStorage
  */
 enum class MusicAsset(
     fileName: String,
-    directory: String,
+    directory: String = "music",
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
 
