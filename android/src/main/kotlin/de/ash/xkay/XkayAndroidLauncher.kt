@@ -3,6 +3,7 @@ package de.ash.xkay
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import de.ash.xkay.main.Xkay
 
 /**
  * Entry point for the android version of the application.

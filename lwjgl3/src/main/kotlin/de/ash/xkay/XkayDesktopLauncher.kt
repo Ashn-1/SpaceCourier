@@ -2,6 +2,7 @@ package de.ash.xkay
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
+import de.ash.xkay.main.Xkay
 
 /**
  * Entry point to the desktop version of the application.

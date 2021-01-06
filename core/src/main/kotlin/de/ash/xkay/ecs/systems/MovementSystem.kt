@@ -1,16 +1,13 @@
 package de.ash.xkay.ecs.systems
 
-import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
-import de.ash.xkay.XkayRuntimeException
 import de.ash.xkay.ecs.components.*
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
-import ktx.math.plusAssign
 
 /**
  * @since 0.1

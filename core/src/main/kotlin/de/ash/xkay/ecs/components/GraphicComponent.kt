@@ -1,10 +1,10 @@
 package de.ash.xkay.ecs.components
 
 import com.badlogic.ashley.core.Component
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Pool
-import de.ash.xkay.Xkay
+import de.ash.xkay.main.Xkay
 import ktx.ashley.mapperFor
 
 /**
@@ -21,12 +21,12 @@ class GraphicComponent : Component, Pool.Poolable {
         sprite.setPosition(0f, 0f)
     }
 
-    fun setSprite(texture: Texture) {
+    fun setSprite(region: TextureRegion) {
         sprite.run {
-            setRegion(texture)
+            setRegion(region)
             setSize(
-                texture.width * Xkay.UNIT_SCALE,
-                texture.height * Xkay.UNIT_SCALE
+                region.regionWidth * Xkay.UNIT_SCALE,
+                region.regionHeight * Xkay.UNIT_SCALE
             )
             setOriginCenter()
         }

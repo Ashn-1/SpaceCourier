@@ -6,16 +6,25 @@
 package de.ash.xkay.screens
 
 import ashutils.ktx.ashLogger
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import de.ash.xkay.assets.TextureAsset
-import de.ash.xkay.Xkay
+import de.ash.xkay.main.Xkay
 import de.ash.xkay.assets.MusicAsset
 import de.ash.xkay.assets.SoundAsset
+import de.ash.xkay.assets.TextureAtlasAsset
+import de.ash.xkay.ui.LabelStyles
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
 import ktx.log.debug
+import ktx.scene2d.*
+import ktx.actors.*
 
 /**
  * Initial state of the game. Here all the assets for the game are loaded and all states are created.
@@ -24,6 +33,9 @@ import ktx.log.debug
  * @author Cpt-Ash (Ahmad Haidari)
  */
 class LoadingScreen(game: Xkay) : XkayScreen(game) {
+
+    private lateinit var progressBarTexture: Image
+    private lateinit var touchToStart: Label
 
     private val logger = ashLogger("LoadingState")
 
@@ -39,6 +51,7 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
         // Queue all the assets to be loaded
         val assetRefs = gdxArrayOf(
             TextureAsset.values().map { assets.loadAsync(it.descriptor) },
+            TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) },
             MusicAsset.values().map { assets.loadAsync(it.descriptor) },
             SoundAsset.values().map { assets.loadAsync(it.descriptor) }
         ).flatten()
@@ -51,15 +64,74 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
         }
 
         // Continue to setup UI, etc. while the assets are loaded
+        setupUI()
     }
 
-    /**
-     * All assets are loaded --> switch to the next screen. This screen is no longer needed and can be removed.
-     */
+    override fun hide() {
+        stage.clear()
+    }
+
+    private fun setupUI() {
+        stage.actors {
+            table {
+
+                // Default settings that are applied to all widgets
+                defaults().fillX().expandX()
+
+                label("Loading Screen", LabelStyles.DEFAULT.name) {
+                    wrap = true
+                    setAlignment(Align.center)
+                }
+                row()
+
+                touchToStart = label("Touch to start", LabelStyles.DEFAULT.name) {
+                    wrap = true
+                    setAlignment(Align.center)
+                    color.a = 0f
+                }
+                row()
+
+                stack { cell ->
+                    progressBarTexture = image("loading_bar").apply {
+                        scaleX = 0f
+                    }
+                    label("Loading...", LabelStyles.DEFAULT.name) {
+                        setAlignment(Align.center)
+                    }
+                    cell.padLeft(5f).padRight(5f)
+                }
+
+                setFillParent(true)
+                pack()
+            }
+        }
+
+        stage.isDebugAll = true
+    }
+
+    override fun render(delta: Float) {
+
+        if (assets.progress.isFinished
+            && Gdx.input.justTouched()
+            && game.containsScreen<IngameScreen>()) {
+
+                // Change the screen and dispose the loading screen
+                game.setScreen<IngameScreen>()
+                game.removeScreen<LoadingScreen>()
+                dispose()
+        }
+
+        progressBarTexture.scaleX = assets.progress.percent
+
+        stage.run {
+            viewport.apply()
+            act(delta)
+            draw()
+        }
+    }
+
     private fun assetsLoaded() {
         game.addScreen(IngameScreen(game))
-        game.setScreen<IngameScreen>()
-        game.removeScreen<LoadingScreen>()
-        dispose()
+        touchToStart += Actions.forever(Actions.sequence(Actions.fadeIn(0.5f) + Actions.fadeOut(0.5f)))
     }
 }

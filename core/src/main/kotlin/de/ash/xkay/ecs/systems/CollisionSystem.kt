@@ -3,12 +3,12 @@ package de.ash.xkay.ecs.systems
 import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
+import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.assets.TextureAsset
 import de.ash.xkay.assets.get
 import de.ash.xkay.ecs.components.*
 import ktx.ashley.*
 import ktx.assets.async.AssetStorage
-import ktx.log.debug
 
 /**
  * Handles the collision detection between different entities with hitboxes.
@@ -46,7 +46,7 @@ class CollisionSystem(
                         }
                         engine.entity {
                             val graphic = with<GraphicComponent> {
-                                setSprite(assets[TextureAsset.EXPLOSION])
+                                setSprite(assets[AtlasAsset.EXPLOSION])
                             }
 
                             with<TransformComponent> {

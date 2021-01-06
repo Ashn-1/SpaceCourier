@@ -1,11 +1,9 @@
 package de.ash.xkay.screens
 
 import ashutils.ktx.ashLogger
-import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import de.ash.xkay.Xkay
+import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventListener

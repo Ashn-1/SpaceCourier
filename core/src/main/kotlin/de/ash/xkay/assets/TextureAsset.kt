@@ -21,15 +21,8 @@ enum class TextureAsset(
     val descriptor: AssetDescriptor<Texture> = AssetDescriptor("$directory/$fileName", Texture::class.java)
 ) {
 
-    PLAYER_BASE_SHIP("ship.png", "textures"),
-
-    ASTEROID_BASIC("asteroid_basic.png", "textures"),
-
-    EXPLOSION("explosion.png", "textures"),
-
     SPACE_BACKGROUND("background.png", "textures"),
 
 }
 
 operator fun AssetStorage.get(asset: TextureAsset) = get(asset.descriptor)
-

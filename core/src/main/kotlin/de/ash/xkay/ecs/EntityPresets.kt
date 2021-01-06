@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
+import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.assets.TextureAsset
 import de.ash.xkay.assets.get
 import de.ash.xkay.ecs.components.*
@@ -24,7 +25,7 @@ fun Engine.createPlayer(
 ) : Entity {
     return entity {
         val graphic = with<GraphicComponent> {
-            setSprite(assets[TextureAsset.PLAYER_BASE_SHIP])
+            setSprite(assets[AtlasAsset.PLAYER_BASE_SHIP])
         }
 
         val transform = with<TransformComponent> {
@@ -48,7 +49,7 @@ fun Engine.createAsteroid(
 ) : Entity {
     return entity {
         val graphic = with<GraphicComponent> {
-            setSprite(assets[TextureAsset.ASTEROID_BASIC])
+            setSprite(assets[AtlasAsset.ASTEROID_BASIC])
         }
 
         val transform = with<TransformComponent> {

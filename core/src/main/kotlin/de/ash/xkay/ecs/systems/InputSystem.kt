@@ -7,9 +7,8 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
-import de.ash.xkay.XkayRuntimeException
+import de.ash.xkay.main.XkayRuntimeException
 import de.ash.xkay.ecs.components.PlayerComponent
-import de.ash.xkay.ecs.components.TransformComponent
 import de.ash.xkay.ecs.components.VelocityComponent
 import ktx.ashley.allOf
 import ktx.ashley.get

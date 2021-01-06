@@ -1,6 +1,6 @@
 package de.ash.xkay.screens
 
-import de.ash.xkay.Xkay
+import de.ash.xkay.main.Xkay
 import ktx.app.KtxScreen
 
 /**
@@ -13,6 +13,7 @@ open class XkayScreen(val game: Xkay) : KtxScreen {
     val gameViewport = game.gameViewport
     val uiViewport = game.uiViewport
     val eventManager = game.eventManager
+    val stage = game.stage
 
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width, height, true)
