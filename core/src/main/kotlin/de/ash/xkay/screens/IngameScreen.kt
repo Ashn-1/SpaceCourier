@@ -40,14 +40,17 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         game.gameViewport.apply(true)
         engine.update(min(delta, maxDeltaTime))
 
-        if (isGameOver && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            reset()
+        if (isGameOver) {
+            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                reset()
+            }
         }
     }
 
     private fun reset() {
         engine.removeAllEntities()
         engine.createPlayer(assets, gameViewport)
+        isGameOver = false
 
         logger.debug { "Game was reset" }
     }

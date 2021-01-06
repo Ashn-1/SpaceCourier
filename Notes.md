@@ -9,10 +9,15 @@
 1. Fix bars on different aspect rations (see app on phone)
 1. Add proper controls on Desktop
 
-~~Add collision detection between player and asteroids 
+## Finished Tasks
+
+~~**Done**
+Fix restart of game on press on mobile
+Add collision detection between player and asteroids 
     * End game on collision and log score
-    * Restart game on press~~
-~~Add asteroid entities that fly from top to bottom~~
-~~Measure points of player by distance travelled~~
-~~Fix input handling of player (see input handling of old)~~
-~~Check if app works on Android (AndroidStudio)~~
+    * Restart game on press
+Add asteroid entities that fly from top to bottom
+Measure points of player by distance travelled
+Fix input handling of player (see input handling of old)
+Check if app works on Android (AndroidStudio)
+End~~

@@ -85,6 +85,7 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
 
         logger.debug { "Max sprites in a single batch: ${batch.maxSpritesInBatch}" }
         batch.dispose()
+        shapeRenderer.dispose()
         assets.dispose()
 
         logger.info { "Exiting game" }
