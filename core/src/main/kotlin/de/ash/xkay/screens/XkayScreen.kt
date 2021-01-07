@@ -15,6 +15,7 @@ open class XkayScreen(val game: Xkay) : KtxScreen {
     val eventManager = game.eventManager
     val stage = game.stage
     val audioService = game.audioService
+    val preferences = game.preferences
 
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width, height, true)

@@ -5,6 +5,8 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.ecs.components.*
+import de.ash.xkay.events.GameEvent
+import de.ash.xkay.events.GameEventManager
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
@@ -14,6 +16,7 @@ import ktx.ashley.get
  * @author Cpt-Ash (Ahmad Haidari)
  */
 class MovementSystem(
+    private val eventManager: GameEventManager,
     private val gameViewport: Viewport
 ) : IteratingSystem(
     allOf(TransformComponent::class, VelocityComponent::class)
@@ -76,6 +79,9 @@ class MovementSystem(
 
             // Increase player highscore
             it.highscore += (pointsPerSecond * deltaTime)
+            eventManager.dispatchEvent(GameEvent.HighscoreChangedEvent.apply {
+                newHighscore = it.highscore.toInt()
+            })
         }
 
         // Update hitbox positions if available

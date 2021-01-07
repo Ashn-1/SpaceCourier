@@ -3,12 +3,16 @@ package de.ash.xkay.screens
 import ashutils.ktx.ashLogger
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import de.ash.xkay.assets.MusicAsset
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventListener
 import ktx.log.debug
+import ktx.preferences.flush
+import ktx.preferences.get
+import ktx.preferences.set
+import ktx.scene2d.actors
+import ktx.scene2d.table
 import kotlin.math.min
 
 /**
@@ -32,7 +36,17 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         eventManager.register(GameEvent.PlayerDeathEvent::class, this)
         reset()
 
+        stage.actors {
+            table {
+
+            }
+        }
+
         logger.debug { "Ingame entered" }
+    }
+
+    override fun hide() {
+        stage.clear()
     }
 
     override fun render(delta: Float) {
@@ -59,6 +73,17 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
             is GameEvent.PlayerDeathEvent -> {
                 logger.debug { "Game over with highscore ${gameEvent.highscore}" }
                 isGameOver = true
+
+                // Update highscore if highest score ever
+                if (gameEvent.highscore > preferences["highscore", 0]) {
+                    preferences.flush {
+                        this["highscore"] = gameEvent.highscore
+                    }
+                }
+
+            }
+            is GameEvent.HighscoreChangedEvent -> {
+                // Change UI to show updated highscore
             }
         }
     }

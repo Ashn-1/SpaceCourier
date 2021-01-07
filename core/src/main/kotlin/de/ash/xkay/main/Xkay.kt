@@ -4,6 +4,7 @@ import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -66,11 +67,13 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
 
     val audioService: AudioService by lazy { DefaultAudioService(assets) }
 
+    val preferences: Preferences by lazy { Gdx.app.getPreferences("xkay.data") }
+
     val engine: Engine by lazy {
         PooledEngine().apply {
             addSystem(InputSystem(gameViewport))
             addSystem(ObstacleSpawnSystem(assets, gameViewport))
-            addSystem(MovementSystem(gameViewport))
+            addSystem(MovementSystem(eventManager, gameViewport))
             addSystem(CollisionSystem(assets))
             addSystem(RenderSystem(
                     batch,

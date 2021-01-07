@@ -69,7 +69,7 @@ class GameEventManager {
      * Dispatches the given [gameEvent]. All listeners that are registered to this event type will be called.
      */
     fun dispatchEvent(gameEvent: GameEvent) {
-        logger.debug { "Dispatch event ${gameEvent::class.simpleName}" }
+        //logger.debug { "Dispatch event ${gameEvent::class.simpleName}" }
         listeners[gameEvent::class]?.forEach { it.onEvent(gameEvent) }
     }
 }

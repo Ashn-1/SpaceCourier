@@ -9,8 +9,14 @@ package de.ash.xkay.events
 sealed class GameEvent {
 
     object PlayerDeathEvent : GameEvent() {
-        var highscore: Long = 0
+        var highscore: Int = 0
 
-        override fun toString() = "PlayerDeathEvent (someVariable = $highscore)"
+        override fun toString() = "PlayerDeathEvent (highscore = $highscore)"
+    }
+
+    object HighscoreChangedEvent : GameEvent() {
+        var newHighscore: Int = 0
+
+        override fun toString() = "HighscoreChangedEvent (newHighscore = $newHighscore"
     }
 }
