@@ -38,6 +38,9 @@ import ktx.log.info
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
+
+const val DEBUG = false
+
 class Xkay : KtxGame<XkayScreen>(null, false) {
     
     private val logger = ashLogger("Main")
@@ -55,6 +58,7 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
     val stage: Stage by lazy {
         Stage(uiViewport).apply {
             Gdx.input.inputProcessor = this
+            isDebugAll = DEBUG
         }
     }
 
@@ -81,7 +85,7 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
                     gameViewport,
                     uiViewport,
                     assets[TextureAsset.SPACE_BACKGROUND],
-                    isDebug = false
+                    isDebug = DEBUG
                 )
             )
             addSystem(RemoveSystem(eventManager))

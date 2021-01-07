@@ -106,8 +106,6 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
                 pack()
             }
         }
-
-        stage.isDebugAll = true
     }
 
     override fun render(delta: Float) {

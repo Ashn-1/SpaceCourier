@@ -3,16 +3,21 @@ package de.ash.xkay.screens
 import ashutils.ktx.ashLogger
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventListener
+import de.ash.xkay.ui.LabelStyles
 import ktx.log.debug
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.actors
+import ktx.scene2d.label
 import ktx.scene2d.table
+import javax.swing.text.StyleConstants.setAlignment
 import kotlin.math.min
 
 /**
@@ -32,13 +37,31 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
     private var isGameOver = false
 
+    // UI variables
+    private lateinit var scoreLabel: Label
+
     override fun show() {
-        eventManager.register(GameEvent.PlayerDeathEvent::class, this)
+        eventManager.run {
+            register(GameEvent.PlayerDeathEvent::class, this@IngameScreen)
+            register(GameEvent.HighscoreChangedEvent::class, this@IngameScreen)
+        }
+
         reset()
 
         stage.actors {
             table {
+                align(Align.topLeft)
 
+                label("Score: ", LabelStyles.DEFAULT.name) {
+                    setAlignment(Align.left)
+                }
+                scoreLabel = label("", LabelStyles.DEFAULT.name) {
+                    setAlignment(Align.left)
+                }
+                row()
+
+                setFillParent(true)
+                pack()
             }
         }
 
@@ -52,6 +75,12 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     override fun render(delta: Float) {
         game.gameViewport.apply(true)
         engine.update(min(delta, maxDeltaTime))
+
+        stage.run {
+            viewport.apply()
+            act(delta)
+            draw()
+        }
 
         if (isGameOver) {
             if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
@@ -84,6 +113,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
             }
             is GameEvent.HighscoreChangedEvent -> {
                 // Change UI to show updated highscore
+                scoreLabel.setText(gameEvent.newHighscore)
             }
         }
     }
