@@ -41,9 +41,11 @@ enum class AtlasAsset(
     ASTEROID_MID_2(TextureAtlasAsset.GRAPHICS, "asteroid_mid_big"),
     ASTEROID_BIG(TextureAtlasAsset.GRAPHICS, "asteroid_big"),
 
+    // Background textures
+    STAR_BASIC(TextureAtlasAsset.GRAPHICS, "star_basic"),
+
     // Misc textures
     EXPLOSION(TextureAtlasAsset.GRAPHICS, "explosion"),
-
 
     /*
     UI

@@ -46,3 +46,10 @@ ship
   orig: 8, 8
   offset: 0, 0
   index: -1
+star_basic
+  rotate: false
+  xy: 11, 1
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1

@@ -5,33 +5,20 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
-import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.badlogic.gdx.utils.viewport.ScreenViewport
-import de.ash.xkay.assets.BitmapFontAsset
-import de.ash.xkay.assets.TextureAsset
-import de.ash.xkay.assets.TextureAtlasAsset
-import de.ash.xkay.assets.get
 import de.ash.xkay.audio.AudioService
 import de.ash.xkay.audio.DefaultAudioService
 import de.ash.xkay.ecs.systems.*
 import de.ash.xkay.events.GameEventManager
 import de.ash.xkay.screens.LoadingScreen
 import de.ash.xkay.screens.XkayScreen
-import de.ash.xkay.ui.createSkin
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import ktx.app.KtxGame
-import ktx.app.clearScreen
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
-import ktx.collections.gdxArrayOf
-import ktx.graphics.LetterboxingViewport
 import ktx.log.debug
 import ktx.log.info
 
@@ -83,7 +70,7 @@ class Xkay : KtxGame<XkayScreen>() {
     val engine: Engine by lazy {
         PooledEngine().apply {
             addSystem(InputSystem(gameViewport))
-            addSystem(ObstacleSpawnSystem(assets, gameViewport))
+            addSystem(SpawnSystem(assets, gameViewport))
             addSystem(MovementSystem(eventManager, gameViewport))
             addSystem(CollisionSystem(assets))
             addSystem(RenderSystem(

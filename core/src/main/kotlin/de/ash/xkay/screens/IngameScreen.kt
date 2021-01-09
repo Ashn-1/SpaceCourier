@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
+import de.ash.xkay.ecs.createStar
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventListener
 import de.ash.xkay.ui.LabelStyles
@@ -91,6 +92,9 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     private fun reset() {
         engine.removeAllEntities()
         engine.createPlayer(assets, gameViewport)
+        repeat(25) {
+            engine.createStar(assets, gameViewport, onGameScreen = true)
+        }
         isGameOver = false
 
         logger.debug { "Game was reset" }

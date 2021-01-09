@@ -6,15 +6,16 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.ecs.createAsteroid
+import de.ash.xkay.ecs.createStar
 import ktx.assets.async.AssetStorage
 
 /**
- * Spawns all the obstacles in the game.
+ * Spawns all dynamic elements of the game.
  *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-class ObstacleSpawnSystem(
+class SpawnSystem(
     private val assets: AssetStorage,
     private val gameViewport: Viewport,
     interval: Float = 1.0f
@@ -28,5 +29,7 @@ class ObstacleSpawnSystem(
             p < 0.9f -> engine.createAsteroid(AtlasAsset.ASTEROID_MID_2, assets, gameViewport)
             p < 1.0f -> engine.createAsteroid(AtlasAsset.ASTEROID_BIG, assets, gameViewport)
         }
+
+        engine.createStar(assets, gameViewport)
     }
 }

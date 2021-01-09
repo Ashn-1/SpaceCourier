@@ -11,6 +11,7 @@ import de.ash.xkay.main.XkayRuntimeException
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.assets.async.AssetStorage
+import ktx.collections.defaultSetSize
 
 /**
  * Contains presets for some entities as extension functions for [Engine].
@@ -87,6 +88,36 @@ fun Engine.createAsteroid(
                     throw XkayRuntimeException("Given AtlasAsset is not an asteroid: ${asteroid.name}")
                 }
             }
+        }
+    }
+}
+
+
+fun Engine.createStar(
+    assets: AssetStorage,
+    gameViewport: Viewport,
+    onGameScreen: Boolean = false
+) : Entity {
+
+    return entity {
+
+        val graphic = with<GraphicComponent> {
+            setSprite(assets[AtlasAsset.STAR_BASIC])
+        }
+
+        val yCoord = if (onGameScreen) MathUtils.random(gameViewport.worldHeight)
+            else MathUtils.random(gameViewport.worldHeight * 0.1f) + gameViewport.worldHeight
+        with<TransformComponent> {
+            setInitialPosition(
+                MathUtils.random(gameViewport.worldWidth),
+                yCoord
+            )
+
+            size.set(graphic.sprite.width, graphic.sprite.height)
+        }
+
+        with<VelocityComponent> {
+            velocity.y = MathUtils.random(-0.75f, -0.5f)
         }
     }
 }
