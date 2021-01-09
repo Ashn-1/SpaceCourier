@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.ecs.components.*
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventManager
+import ktx.ashley.addComponent
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
@@ -28,6 +29,8 @@ class MovementSystem(
     private val updateRate = 1 / 30f
 
     private val pointsPerSecond = 50f
+
+    private val deathHeight = -gameViewport.worldHeight / 2f
 
     private var accumulator = 0f
 
@@ -91,5 +94,10 @@ class MovementSystem(
 
         // Update hitbox positions if available
         entity[HitboxComponent.mapper]?.hitbox?.setPosition(transform.position)
+
+        // Remove the entity if it is below a certain line under the bottom of the screen
+        if (transform.position.y < deathHeight) {
+            entity.addComponent<RemoveComponent>(engine)
+        }
     }
 }
