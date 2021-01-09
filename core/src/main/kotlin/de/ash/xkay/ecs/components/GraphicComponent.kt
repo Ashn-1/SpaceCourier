@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Pool
+import de.ash.xkay.main.UNIT_SCALE
 import de.ash.xkay.main.Xkay
 import ktx.ashley.mapperFor
 
@@ -25,8 +26,8 @@ class GraphicComponent : Component, Pool.Poolable {
         sprite.run {
             setRegion(region)
             setSize(
-                region.regionWidth * Xkay.UNIT_SCALE,
-                region.regionHeight * Xkay.UNIT_SCALE
+                region.regionWidth * UNIT_SCALE,
+                region.regionHeight * UNIT_SCALE
             )
             setOriginCenter()
         }

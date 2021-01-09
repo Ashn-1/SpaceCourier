@@ -36,7 +36,10 @@ enum class AtlasAsset(
     PLAYER_BASE_SHIP(TextureAtlasAsset.GRAPHICS, "ship"),
 
     // Obstacle textures
-    ASTEROID_BASIC(TextureAtlasAsset.GRAPHICS, "asteroid_basic"),
+    ASTEROID_SMALL(TextureAtlasAsset.GRAPHICS, "asteroid_small"),
+    ASTEROID_MID_1(TextureAtlasAsset.GRAPHICS, "asteroid_mid_small"),
+    ASTEROID_MID_2(TextureAtlasAsset.GRAPHICS, "asteroid_mid_big"),
+    ASTEROID_BIG(TextureAtlasAsset.GRAPHICS, "asteroid_big"),
 
     // Misc textures
     EXPLOSION(TextureAtlasAsset.GRAPHICS, "explosion"),

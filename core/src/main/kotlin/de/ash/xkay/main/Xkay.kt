@@ -8,9 +8,11 @@ import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.ScreenViewport
 import de.ash.xkay.assets.BitmapFontAsset
 import de.ash.xkay.assets.TextureAsset
 import de.ash.xkay.assets.TextureAtlasAsset
@@ -29,6 +31,7 @@ import ktx.app.clearScreen
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
+import ktx.graphics.LetterboxingViewport
 import ktx.log.debug
 import ktx.log.info
 
@@ -39,16 +42,20 @@ import ktx.log.info
  * @author Cpt-Ash (Ahmad Haidari)
  */
 
-const val DEBUG = false
+const val DEBUG = true
+const val UNIT_SCALE = 1 / 8f
+const val GAME_SCREEN_WIDTH = 9f
+const val GAME_SCREEN_HEIGHT = 16f
+const val UI_SCREEN_WIDTH = 144f
+const val UI_SCREEN_HEIGHT = 256f
 
-class Xkay : KtxGame<XkayScreen>(null, false) {
+class Xkay : KtxGame<XkayScreen>() {
     
     private val logger = ashLogger("Main")
 
     // Viewports used in the game
-    val uiViewport by lazy { FitViewport(144f, 256f) }
-    val gameViewport by lazy { FitViewport(9f, 16f) }
-    val gameCamera by lazy { gameViewport.camera as OrthographicCamera }
+    val uiViewport by lazy { FitViewport(UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT) }
+    val gameViewport by lazy { FitViewport(GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT) }
 
     // OpenGL renderers for sprites and shapes
     val batch: SpriteBatch by lazy { SpriteBatch() }
@@ -82,9 +89,8 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
             addSystem(RenderSystem(
                     batch,
                     shapeRenderer,
+                    stage,
                     gameViewport,
-                    uiViewport,
-                    assets[TextureAsset.SPACE_BACKGROUND],
                     isDebug = DEBUG
                 )
             )
@@ -111,11 +117,6 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
         }
     }
 
-    override fun render() {
-        clearScreen(1f, 0f, 1f, 1f)
-        super.render()
-    }
-
     override fun dispose() {
         super.dispose()
 
@@ -126,9 +127,5 @@ class Xkay : KtxGame<XkayScreen>(null, false) {
         stage.dispose()
 
         logger.info { "Exiting game" }
-    }
-
-    companion object {
-        const val UNIT_SCALE = 1 / 16f
     }
 }

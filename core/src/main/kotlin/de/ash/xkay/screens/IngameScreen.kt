@@ -14,9 +14,7 @@ import ktx.log.debug
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.actors
-import ktx.scene2d.label
-import ktx.scene2d.table
+import ktx.scene2d.*
 import javax.swing.text.StyleConstants.setAlignment
 import kotlin.math.min
 
@@ -50,13 +48,21 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
         stage.actors {
             table {
+                defaults().fillX().expandX()
+
                 align(Align.topLeft)
 
-                label("Score: ", LabelStyles.DEFAULT.name) {
-                    setAlignment(Align.left)
-                }
-                scoreLabel = label("", LabelStyles.DEFAULT.name) {
-                    setAlignment(Align.left)
+                stack {
+                    image("loading_bar")
+
+                    horizontalGroup {
+                        label("Score: ", LabelStyles.DEFAULT.name) {
+                            setAlignment(Align.left)
+                        }
+                        scoreLabel = label("", LabelStyles.DEFAULT.name) {
+                            setAlignment(Align.left)
+                        }
+                    }
                 }
                 row()
 
@@ -73,14 +79,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     }
 
     override fun render(delta: Float) {
-        game.gameViewport.apply(true)
         engine.update(min(delta, maxDeltaTime))
-
-        stage.run {
-            viewport.apply()
-            act(delta)
-            draw()
-        }
 
         if (isGameOver) {
             if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
@@ -100,11 +99,12 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     override fun onEvent(gameEvent: GameEvent) {
         when (gameEvent) {
             is GameEvent.PlayerDeathEvent -> {
-                logger.debug { "Game over with highscore ${gameEvent.highscore}" }
+                logger.debug { "Game over with score ${gameEvent.highscore}" }
                 isGameOver = true
 
                 // Update highscore if highest score ever
                 if (gameEvent.highscore > preferences["highscore", 0]) {
+                    logger.debug { "New highscore -> old: ${preferences["highscore", 0]}, new: ${gameEvent.highscore}" }
                     preferences.flush {
                         this["highscore"] = gameEvent.highscore
                     }

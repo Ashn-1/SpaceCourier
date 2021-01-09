@@ -67,6 +67,11 @@ class MovementSystem(
         // Update the position based on the velocity
         transform.position.mulAdd(velocity.velocity, deltaTime)
 
+        // Rotate entities with given component
+        entity[RotateComponent.mapper]?.let {
+            transform.rotationDeg += it.degreesPerSecond * deltaTime
+        }
+
         // Player entity needs some special handling
         entity[PlayerComponent.mapper]?.let { // if not null
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.main.XkayRuntimeException
 import de.ash.xkay.ecs.components.GraphicComponent
@@ -25,9 +26,8 @@ import ktx.graphics.use
 class RenderSystem(
     private val batch: SpriteBatch,
     private val shapeRenderer: ShapeRenderer,
+    private val stage: Stage,
     private val gameViewport: Viewport,
-    private val uiViewport: Viewport,
-    backgroundTexture: Texture,
     var isDebug: Boolean = false
 ) : SortedIteratingSystem(
     allOf(TransformComponent::class, GraphicComponent::class).get(),
@@ -36,28 +36,9 @@ class RenderSystem(
 
     private val logger = ashLogger("RenderSys")
 
-    private val backgroundScrollSpeed = 0.01f
-
-    private val backgroundSprite = Sprite(backgroundTexture.apply {
-        setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
-    }).apply {
-        //setSize(texture.width * Xkay.UNIT_SCALE, texture.height * Xkay.UNIT_SCALE)
-        //y = -MathUtils.random(height)
-    }
-
     override fun update(deltaTime: Float) {
 
-        // Use UI view for larger things like UI and background
-        uiViewport.apply()
-        batch.use(uiViewport.camera) {
-            // Scroll the background and render it
-            backgroundSprite.run {
-                scroll(0f, -backgroundScrollSpeed * deltaTime)
-                draw(batch)
-            }
-        }
-
-        // Force sorting on next updates
+        // On super.update call the entities are depth sorted
         forceSort()
 
         // Use game viewport for small entities
@@ -76,6 +57,13 @@ class RenderSystem(
                     }
                 }
             }
+        }
+
+        // Render the stage over the entities
+        stage.run {
+            viewport.apply()
+            act(deltaTime)
+            draw()
         }
     }
 
