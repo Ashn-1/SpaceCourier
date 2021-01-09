@@ -69,7 +69,7 @@ fun Engine.createAsteroid(
         }
 
         with<VelocityComponent> {
-            velocity.y = -2.5f
+            velocity.y = MathUtils.random(-3f, -2f)
         }
 
         with<RotateComponent> {
