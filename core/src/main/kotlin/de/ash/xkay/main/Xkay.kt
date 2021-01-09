@@ -102,19 +102,9 @@ class Xkay : KtxGame<XkayScreen>() {
         Gdx.app.logLevel = Logger.DEBUG
         logger.info { "Starting game" }
 
-        // Load skin and font to display loading screen
-        val assetRefs = gdxArrayOf(
-            TextureAtlasAsset.values().filter { it.isUiAtlas }.map { assets.loadAsync(it.descriptor) },
-            BitmapFontAsset.values().map { assets.loadAsync(it.descriptor) }
-        ).flatten()
-        KtxAsync.launch {
-            assetRefs.joinAll()
-            createSkin(assets)
-
-            // Start loading screen
-            addScreen(LoadingScreen(this@Xkay))
-            setScreen<LoadingScreen>()
-        }
+        // Start loading screen
+        addScreen(LoadingScreen(this))
+        setScreen<LoadingScreen>()
     }
 
     override fun dispose() {

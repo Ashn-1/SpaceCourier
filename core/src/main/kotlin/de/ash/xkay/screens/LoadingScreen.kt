@@ -12,12 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import de.ash.xkay.assets.TextureAsset
+import de.ash.xkay.assets.*
 import de.ash.xkay.main.Xkay
-import de.ash.xkay.assets.MusicAsset
-import de.ash.xkay.assets.SoundAsset
-import de.ash.xkay.assets.TextureAtlasAsset
 import de.ash.xkay.ui.LabelStyles
+import de.ash.xkay.ui.createSkin
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
@@ -49,7 +47,12 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
             TmxMapLoader(assets.fileResolver)
         }
 
-        // Queue all the assets to be loaded
+        // Load assets needed for showing the loading screen synchronously
+        TextureAtlasAsset.values().filter { it.isUiAtlas }.forEach { assets.loadSync(it.descriptor) }
+        BitmapFontAsset.values().forEach { assets.loadSync(it.descriptor) }
+        createSkin(assets)
+
+        // Queue all the rest assets to be loaded
         val assetRefs = gdxArrayOf(
             TextureAsset.values().map { assets.loadAsync(it.descriptor) },
             TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) },
@@ -57,7 +60,7 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
             MusicAsset.values().map { assets.loadAsync(it.descriptor) }
         ).flatten()
 
-        // Launch coroutine to load all the assets
+        // Launch coroutine to load all the rest assets
         KtxAsync.launch {
             assetRefs.joinAll()
             logger.debug { "Done loading in ${System.currentTimeMillis() - loadingStartTime} ms" }
