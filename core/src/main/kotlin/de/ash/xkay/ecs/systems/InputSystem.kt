@@ -34,8 +34,6 @@ class InputSystem(
 
     private var lastTouchDirection = Direction.NONE
 
-    private val touchPositionTmp = Vector2()
-
     private val movementSpeed = 5f
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

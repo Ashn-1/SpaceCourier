@@ -5,7 +5,6 @@
 
 ## ToDos
 
-1. Add Game Over screen to the game with restart button and highscore
 1. Change controls to follow the touch
 1. Add depth/layer in TransformComponent (needed for stars to always be behind asteroids)
 1. Reduce explosion sprite by half
