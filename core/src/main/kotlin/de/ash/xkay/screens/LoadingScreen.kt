@@ -88,7 +88,7 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
                 }
                 row()
 
-                touchToStart = label("Touch to start", LabelStyles.DEFAULT.name) {
+                touchToStart = label("Touch to Start", LabelStyles.DEFAULT.name) {
                     wrap = true
                     setAlignment(Align.center)
                     color.a = 0f
@@ -96,7 +96,7 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
                 row()
 
                 stack { cell ->
-                    progressBarTexture = image("loading_bar").apply {
+                    progressBarTexture = image(AtlasAsset.LOADING_BAR.regionName).apply {
                         scaleX = 0f
                     }
                     progressBarLabel = label("Loading...", LabelStyles.DEFAULT.name) {
@@ -126,15 +126,12 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
         progressBarTexture.scaleX = assets.progress.percent
         progressBarLabel.setText("${assets.progress.percent * 100} %")
 
-        stage.run {
-            viewport.apply()
-            act(delta)
-            draw()
-        }
+        game.engine.update(delta)
     }
 
     private fun assetsLoaded() {
         game.addScreen(IngameScreen(game))
+        game.addScreen(GameOverScreen(game))
         touchToStart += Actions.forever(Actions.sequence(Actions.fadeIn(0.5f) + Actions.fadeOut(0.5f)))
     }
 }

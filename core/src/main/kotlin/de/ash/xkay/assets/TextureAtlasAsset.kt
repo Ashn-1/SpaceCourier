@@ -52,6 +52,7 @@ enum class AtlasAsset(
     /*
     UI
      */
+    LOADING_BAR(TextureAtlasAsset.UI, "loading_bar"),
 }
 
 operator fun AssetStorage.get(asset: TextureAtlasAsset) = get(asset.descriptor)

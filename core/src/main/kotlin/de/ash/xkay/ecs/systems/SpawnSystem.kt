@@ -35,6 +35,5 @@ class SpawnSystem(
             p < 0.95f -> engine.createStar(AtlasAsset.STAR_GREY, assets, gameViewport)
             p < 1.0f -> engine.createStar(AtlasAsset.STAR_RED, assets, gameViewport)
         }
-
     }
 }

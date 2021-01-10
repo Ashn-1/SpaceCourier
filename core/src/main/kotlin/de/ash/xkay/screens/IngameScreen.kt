@@ -9,15 +9,16 @@ import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.ecs.createStar
+import de.ash.xkay.ecs.systems.SpawnSystem
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventListener
 import de.ash.xkay.ui.LabelStyles
+import ktx.ashley.getSystem
 import ktx.log.debug
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.*
-import javax.swing.text.StyleConstants.setAlignment
 import kotlin.math.min
 
 /**
@@ -46,6 +47,8 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
             register(GameEvent.HighscoreChangedEvent::class, this@IngameScreen)
         }
 
+        engine.getSystem<SpawnSystem>().setProcessing(true)
+
         reset()
 
         stage.actors {
@@ -55,7 +58,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
                 align(Align.topLeft)
 
                 stack {
-                    image("loading_bar")
+                    image(AtlasAsset.LOADING_BAR.regionName)
 
                     horizontalGroup {
                         label("Score: ", LabelStyles.DEFAULT.name) {
@@ -77,7 +80,12 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     }
 
     override fun hide() {
+        engine.removeAllEntities()
+        engine.getSystem<SpawnSystem>().setProcessing(false)
+
         stage.clear()
+
+        eventManager.unregister(this)
     }
 
     override fun render(delta: Float) {
@@ -104,17 +112,27 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     override fun onEvent(gameEvent: GameEvent) {
         when (gameEvent) {
             is GameEvent.PlayerDeathEvent -> {
-                logger.debug { "Game over with score ${gameEvent.highscore}" }
+                logger.debug { "Game over with score ${gameEvent.score}" }
                 isGameOver = true
 
+                // Setup the game over screen
+                game.getScreen<GameOverScreen>().run {
+                    score = gameEvent.score
+                    highscore = preferences["highscore", 0]
+                }
+
                 // Update highscore if highest score ever
-                if (gameEvent.highscore > preferences["highscore", 0]) {
-                    logger.debug { "New highscore -> old: ${preferences["highscore", 0]}, new: ${gameEvent.highscore}" }
+                if (gameEvent.score > preferences["highscore", 0]) {
+                    logger.debug { "New highscore -> old: ${preferences["highscore", 0]}, new: ${gameEvent.score}" }
+
+                    // Save the new highscore
                     preferences.flush {
-                        this["highscore"] = gameEvent.highscore
+                        this["highscore"] = gameEvent.score
                     }
                 }
 
+                // Switch to the game over screen
+                game.setScreen<GameOverScreen>()
             }
             is GameEvent.HighscoreChangedEvent -> {
                 // Change UI to show updated highscore

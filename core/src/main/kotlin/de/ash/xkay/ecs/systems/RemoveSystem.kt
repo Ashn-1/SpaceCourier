@@ -36,7 +36,7 @@ class RemoveSystem(
             // Player died
             entity[PlayerComponent.mapper]?.let { player ->
                 eventManager.dispatchEvent(GameEvent.PlayerDeathEvent.apply {
-                    highscore = player.highscore.toInt()
+                    score = player.highscore.toInt()
                 })
             }
 
