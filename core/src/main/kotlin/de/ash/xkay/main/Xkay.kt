@@ -29,7 +29,7 @@ import ktx.log.info
  * @author Cpt-Ash (Ahmad Haidari)
  */
 
-const val DEBUG = true
+const val DEBUG = false
 const val UNIT_SCALE = 1 / 8f
 const val GAME_SCREEN_WIDTH = 9f
 const val GAME_SCREEN_HEIGHT = 16f

@@ -12,7 +12,7 @@ import de.ash.xkay.main.Xkay
  */
 
 const val WINDOW_WIDTH = 360
-const val WINDOW_HEIGHT = 720
+const val WINDOW_HEIGHT = 640
 
 fun main()
 {

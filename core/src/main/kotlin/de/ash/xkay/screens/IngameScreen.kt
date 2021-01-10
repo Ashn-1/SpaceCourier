@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.ecs.createStar
@@ -93,7 +94,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         engine.removeAllEntities()
         engine.createPlayer(assets, gameViewport)
         repeat(25) {
-            engine.createStar(assets, gameViewport, onGameScreen = true)
+            engine.createStar(AtlasAsset.STAR_WHITE, assets, gameViewport, onGameScreen = true)
         }
         isGameOver = false
 

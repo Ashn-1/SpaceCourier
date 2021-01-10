@@ -11,7 +11,6 @@ import de.ash.xkay.main.XkayRuntimeException
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.assets.async.AssetStorage
-import ktx.collections.defaultSetSize
 
 /**
  * Contains presets for some entities as extension functions for [Engine].
@@ -92,8 +91,8 @@ fun Engine.createAsteroid(
     }
 }
 
-
 fun Engine.createStar(
+    star: AtlasAsset,
     assets: AssetStorage,
     gameViewport: Viewport,
     onGameScreen: Boolean = false
@@ -102,7 +101,7 @@ fun Engine.createStar(
     return entity {
 
         val graphic = with<GraphicComponent> {
-            setSprite(assets[AtlasAsset.STAR_BASIC])
+            setSprite(assets[star])
         }
 
         val yCoord = if (onGameScreen) MathUtils.random(gameViewport.worldHeight)

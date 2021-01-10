@@ -15,8 +15,10 @@ class XkayAndroidLauncher : AndroidApplication() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val config = AndroidApplicationConfiguration()
-
-        initialize(Xkay(), config)
+        initialize(Xkay(), AndroidApplicationConfiguration().apply {
+            hideStatusBar = true
+            useImmersiveMode = true
+            useWakelock = true
+        })
     }
 }

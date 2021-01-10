@@ -30,6 +30,11 @@ class SpawnSystem(
             p < 1.0f -> engine.createAsteroid(AtlasAsset.ASTEROID_BIG, assets, gameViewport)
         }
 
-        engine.createStar(assets, gameViewport)
+        when {
+            p < 0.85f -> engine.createStar(AtlasAsset.STAR_WHITE, assets, gameViewport)
+            p < 0.95f -> engine.createStar(AtlasAsset.STAR_GREY, assets, gameViewport)
+            p < 1.0f -> engine.createStar(AtlasAsset.STAR_RED, assets, gameViewport)
+        }
+
     }
 }
