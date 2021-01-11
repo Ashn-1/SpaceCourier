@@ -25,7 +25,7 @@ fun Engine.createPlayer(
 ) : Entity {
     return entity {
         val graphic = with<GraphicComponent> {
-            setSprite(assets[AtlasAsset.PLAYER_BASE_SHIP])
+            setSprite(assets[AtlasAsset.PLAYER_SHIP])
         }
 
         val transform = with<TransformComponent> {
@@ -111,6 +111,8 @@ fun Engine.createStar(
                 MathUtils.random(gameViewport.worldWidth),
                 yCoord
             )
+
+            depthLevel = -1
 
             size.set(graphic.sprite.width, graphic.sprite.height)
         }

@@ -33,7 +33,9 @@ enum class AtlasAsset(
     GRAPHICS
      */
     // Ship textures
-    PLAYER_BASE_SHIP(TextureAtlasAsset.GRAPHICS, "ship"),
+    PLAYER_SHIP(TextureAtlasAsset.GRAPHICS, "ship"),
+    PLAYER_SHIP_LEFT(TextureAtlasAsset.GRAPHICS, "ship_left"),
+    PLAYER_SHIP_RIGHT(TextureAtlasAsset.GRAPHICS, "ship_right"),
 
     // Obstacle textures
     ASTEROID_SMALL(TextureAtlasAsset.GRAPHICS, "asteroid_small"),

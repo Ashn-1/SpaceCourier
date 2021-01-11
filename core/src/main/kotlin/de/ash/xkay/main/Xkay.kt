@@ -17,7 +17,6 @@ import de.ash.xkay.events.GameEventManager
 import de.ash.xkay.screens.LoadingScreen
 import de.ash.xkay.screens.XkayScreen
 import ktx.app.KtxGame
-import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import ktx.log.debug
@@ -70,7 +69,8 @@ class Xkay : KtxGame<XkayScreen>() {
 
     val engine: Engine by lazy {
         PooledEngine().apply {
-            addSystem(InputSystem(gameViewport))
+            addSystem(PlayerInputSystem(gameViewport))
+            addSystem(PlayerAnimationSystem(assets))
             addSystem(SpawnSystem(assets, gameViewport).apply { setProcessing(false) })
             addSystem(MovementSystem(eventManager, gameViewport))
             addSystem(CollisionSystem(assets))

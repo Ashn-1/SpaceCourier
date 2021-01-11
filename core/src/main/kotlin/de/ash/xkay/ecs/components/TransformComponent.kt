@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
-import javax.xml.crypto.dsig.Transform
 
 /**
  * @since 0.1
@@ -16,6 +15,8 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     val prevPosition = Vector2()
     val interpolatedPosition = Vector2()
 
+    var depthLevel = 0
+
     val size = Vector2()
 
     var rotationDeg = 0f
@@ -24,6 +25,8 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         position.set(Vector2.Zero)
         prevPosition.set(Vector2.Zero)
         interpolatedPosition.set(Vector2.Zero)
+
+        depthLevel = 0
 
         size.set(Vector2.Zero)
 
@@ -41,7 +44,8 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     }
 
     override fun compareTo(other: TransformComponent): Int {
-        return position.y.compareTo(other.position.y)
+        return if (depthLevel == other.depthLevel) position.y.compareTo(other.position.y)
+            else depthLevel.compareTo(other.depthLevel)
     }
 
     companion object {
