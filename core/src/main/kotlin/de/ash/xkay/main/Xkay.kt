@@ -74,6 +74,7 @@ class Xkay : KtxGame<XkayScreen>() {
             addSystem(SpawnSystem(assets, gameViewport).apply { setProcessing(false) })
             addSystem(MovementSystem(eventManager, gameViewport))
             addSystem(CollisionSystem(assets))
+            addSystem(AnimationSystem())
             addSystem(RenderSystem(
                     batch,
                     shapeRenderer,

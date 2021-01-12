@@ -4,9 +4,11 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
+import de.ash.xkay.assets.AtlasAnimationAsset
 import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.assets.get
 import de.ash.xkay.ecs.components.*
+import de.ash.xkay.main.UNIT_SCALE
 import de.ash.xkay.main.XkayRuntimeException
 import ktx.ashley.entity
 import ktx.ashley.with
@@ -40,6 +42,27 @@ fun Engine.createPlayer(
 
         with<PlayerComponent>()
         with<VelocityComponent>()
+
+
+        // Create engine fire entity
+        /*
+        engine.entity { // Fire engine
+            val fireAnimation = with<AnimationComponent> {
+                frames = assets[AtlasAnimationAsset.ENGINE_FIRE]
+                frameDuration = 1 / 10f
+            }
+            val fireGraphic = with<GraphicComponent> {
+                setSprite(fireAnimation.getCurrentFrame())
+            }
+            with<TransformComponent> {
+                setInitialPosition(
+                    transform.position.x,
+                    transform.position.y - 6f * UNIT_SCALE
+                )
+                size.set(fireGraphic.sprite.width, fireGraphic.sprite.height)
+            }
+        }
+         */
     }
 }
 

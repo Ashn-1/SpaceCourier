@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import ktx.assets.async.AssetStorage
+import ktx.collections.GdxArray
 
 /**
  * Contains all the texture atlas assets of the game.
@@ -57,8 +58,19 @@ enum class AtlasAsset(
     LOADING_BAR(TextureAtlasAsset.UI, "loading_bar"),
 }
 
+enum class AtlasAnimationAsset(
+    val atlas: TextureAtlasAsset,
+    val regionName: String
+) {
+    ENGINE_FIRE(TextureAtlasAsset.GRAPHICS, "engine_fire"),
+}
+
 operator fun AssetStorage.get(asset: TextureAtlasAsset) = get(asset.descriptor)
 
 operator fun AssetStorage.get(asset: AtlasAsset): TextureRegion {
     return get(asset.atlas).findRegion(asset.regionName)
+}
+
+operator fun AssetStorage.get(asset: AtlasAnimationAsset) : GdxArray<out TextureRegion> {
+    return get(asset.atlas).findRegions(asset.regionName)
 }

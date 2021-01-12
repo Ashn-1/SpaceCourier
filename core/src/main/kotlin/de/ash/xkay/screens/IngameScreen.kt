@@ -5,7 +5,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.sun.corba.se.impl.orbutil.graph.Graph
+import de.ash.xkay.assets.AtlasAnimationAsset
 import de.ash.xkay.assets.AtlasAsset
+import de.ash.xkay.assets.get
+import de.ash.xkay.ecs.components.AnimationComponent
+import de.ash.xkay.ecs.components.GraphicComponent
+import de.ash.xkay.ecs.components.TransformComponent
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.ecs.createStar
@@ -13,7 +19,9 @@ import de.ash.xkay.ecs.systems.SpawnSystem
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventListener
 import de.ash.xkay.ui.LabelStyles
+import ktx.ashley.entity
 import ktx.ashley.getSystem
+import ktx.ashley.with
 import ktx.log.debug
 import ktx.preferences.flush
 import ktx.preferences.get
