@@ -41,9 +41,15 @@ class CollisionSystem(
                 otherEntity[HitboxComponent.mapper]?.let { other ->
                     if (hitbox.overlaps(other.hitbox)) { // Player collided with obstacle
 
+                        // Schedule player entity for removal
                         entity.addComponent<RemoveComponent>(engine) {
                             delay = 1f
                         }
+
+                        // Set player to invisible
+                        entity[GraphicComponent.mapper]?.sprite?.setAlpha(0f)
+
+                        // Add explosion entity
                         engine.entity {
                             val graphic = with<GraphicComponent> {
                                 setSprite(assets[AtlasAsset.EXPLOSION])

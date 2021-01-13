@@ -25,7 +25,8 @@ fun Engine.createPlayer(
     assets: AssetStorage,
     gameViewport: Viewport
 ) : Entity {
-    return entity {
+    val player = entity {
+
         val graphic = with<GraphicComponent> {
             setSprite(assets[AtlasAsset.PLAYER_SHIP])
         }
@@ -42,28 +43,27 @@ fun Engine.createPlayer(
 
         with<PlayerComponent>()
         with<VelocityComponent>()
-
-
-        // Create engine fire entity
-        /*
-        engine.entity { // Fire engine
-            val fireAnimation = with<AnimationComponent> {
-                frames = assets[AtlasAnimationAsset.ENGINE_FIRE]
-                frameDuration = 1 / 10f
-            }
-            val fireGraphic = with<GraphicComponent> {
-                setSprite(fireAnimation.getCurrentFrame())
-            }
-            with<TransformComponent> {
-                setInitialPosition(
-                    transform.position.x,
-                    transform.position.y - 6f * UNIT_SCALE
-                )
-                size.set(fireGraphic.sprite.width, fireGraphic.sprite.height)
-            }
-        }
-         */
     }
+
+    // Create engine fire entity
+    entity { // Fire engine
+        val fireAnimation = with<AnimationComponent> {
+            frames = assets[AtlasAnimationAsset.ENGINE_FIRE]
+            frameDuration = 1 / 10f
+        }
+        val fireGraphic = with<GraphicComponent> {
+            setSprite(fireAnimation.getCurrentFrame())
+        }
+        with<TransformComponent> {
+            size.set(fireGraphic.sprite.width, fireGraphic.sprite.height)
+        }
+        with<AttachComponent> {
+            entity = player
+            offset.set(0f, -6f * UNIT_SCALE)
+        }
+    }
+
+    return player
 }
 
 fun Engine.createAsteroid(
