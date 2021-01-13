@@ -4,6 +4,7 @@ import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -48,10 +49,12 @@ class Xkay : KtxGame<XkayScreen>() {
     val batch: SpriteBatch by lazy { SpriteBatch() }
     val shapeRenderer: ShapeRenderer by lazy { ShapeRenderer() }
 
+    val inputs = InputMultiplexer()
+
     // UI
     val stage: Stage by lazy {
         Stage(uiViewport).apply {
-            Gdx.input.inputProcessor = this
+            inputs.addProcessor(0, this)
             isDebugAll = DEBUG
         }
     }
@@ -69,7 +72,9 @@ class Xkay : KtxGame<XkayScreen>() {
 
     val engine: Engine by lazy {
         PooledEngine().apply {
-            addSystem(PlayerInputSystem(gameViewport))
+            val playerInput = PlayerInputSystem(gameViewport)
+            inputs.addProcessor(1, playerInput.playerGestureDetection)
+            addSystem(playerInput)
             addSystem(PlayerAnimationSystem(assets))
             addSystem(SpawnSystem(assets, gameViewport).apply { setProcessing(false) })
             addSystem(MovementSystem(eventManager, gameViewport))
@@ -91,6 +96,8 @@ class Xkay : KtxGame<XkayScreen>() {
     override fun create() {
         Gdx.app.logLevel = Logger.DEBUG
         logger.info { "Starting game" }
+
+        Gdx.input.inputProcessor = inputs
 
         // Start loading screen
         addScreen(LoadingScreen(this))

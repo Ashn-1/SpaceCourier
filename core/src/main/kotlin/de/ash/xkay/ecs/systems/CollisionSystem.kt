@@ -3,6 +3,7 @@ package de.ash.xkay.ecs.systems
 import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Gdx
 import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.assets.TextureAsset
 import de.ash.xkay.assets.get
@@ -39,7 +40,8 @@ class CollisionSystem(
 
                 // Check collision if other entity has hitbox
                 otherEntity[HitboxComponent.mapper]?.let { other ->
-                    if (hitbox.overlaps(other.hitbox)) { // Player collided with obstacle
+                    if (hitbox.overlaps(other.hitbox)) {
+                        // Player collided with obstacle -> kill him
 
                         // Schedule player entity for removal
                         entity.addComponent<RemoveComponent>(engine) {
@@ -64,6 +66,9 @@ class CollisionSystem(
                                 delay = 0.9f
                             }
                         }
+
+                        // Vibrate the phone
+                        Gdx.input.vibrate(500)
                     }
                 }
             }

@@ -5,15 +5,21 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
+import com.badlogic.gdx.InputAdapter
+import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import de.ash.xkay.main.XkayRuntimeException
 import de.ash.xkay.ecs.components.PlayerComponent
+import de.ash.xkay.ecs.components.RemoveComponent
 import de.ash.xkay.ecs.components.TransformComponent
 import de.ash.xkay.ecs.components.VelocityComponent
 import ktx.ashley.allOf
+import ktx.ashley.exclude
 import ktx.ashley.get
+import ktx.log.debug
 import ktx.math.vec2
 import javax.xml.crypto.dsig.Transform
 import kotlin.math.abs
@@ -25,7 +31,9 @@ import kotlin.math.abs
 class PlayerInputSystem(
     private val gameViewport: Viewport
 ) : IteratingSystem(
-    allOf(PlayerComponent::class, TransformComponent::class, VelocityComponent::class).get()
+    allOf(PlayerComponent::class, TransformComponent::class, VelocityComponent::class)
+        .exclude(RemoveComponent::class)
+        .get()
 ) {
 
     /*
@@ -38,6 +46,8 @@ class PlayerInputSystem(
 
     private val logger = ashLogger("InputSys")
 
+    val playerGestureDetection = GestureDetector(PlayerGestureListener())
+
     //private var lastTouchDirection = Direction.NONE
 
     private val touchPosition = Vector2()
@@ -46,11 +56,20 @@ class PlayerInputSystem(
 
     private val movementSpeed = 5f
 
+    private var isDoubleClick = false
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
         require(transform != null) { "Entity $entity does not have a TransformComponent" }
         val velocity = entity[VelocityComponent.mapper]?.velocity
         require(velocity != null) { "Entity $entity does not have a VelocityComponent" }
+
+        if (isDoubleClick) {
+            isDoubleClick = false
+
+            // TODO activate shield
+            logger.debug { "Shields are activated" }
+        }
 
         if (Gdx.input.isTouched) {
             // Get touch position and unproject them
@@ -118,5 +137,21 @@ class PlayerInputSystem(
             else -> throw XkayRuntimeException("OS ${Gdx.app.type} not supported")
         }
         */
+    }
+
+    /**
+     * True only if a player entity is in the engine -> only the case during the IngameScreen
+     */
+    fun isActive() = entities.size() > 0
+
+    inner class PlayerGestureListener : GestureDetector.GestureAdapter() {
+        override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
+            if (!isActive()) return false
+            if (count >= 2) {
+                isDoubleClick = true
+                return true
+            }
+            return false
+        }
     }
 }
