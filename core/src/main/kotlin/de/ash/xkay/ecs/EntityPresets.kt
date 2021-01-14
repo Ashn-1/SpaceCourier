@@ -50,6 +50,7 @@ fun Engine.createPlayer(
         val fireAnimation = with<AnimationComponent> {
             frames = assets[AtlasAnimationAsset.ENGINE_FIRE]
             frameDuration = 1 / 10f
+            playMode = AnimationComponent.PlayMode.LOOP
         }
         val fireGraphic = with<GraphicComponent> {
             setSprite(fireAnimation.getCurrentFrame())

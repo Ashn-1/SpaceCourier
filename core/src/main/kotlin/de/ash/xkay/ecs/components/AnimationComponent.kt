@@ -19,6 +19,11 @@ class AnimationComponent :
     Component,
     Pool.Poolable {
 
+    enum class PlayMode {
+        NORMAL,     // Play animation once and stay at last frame
+        LOOP        // Restart animation oce the end has been reached
+    }
+
     /**
      * Contains the [TextureRegion]'s that are the frames of the animation.
      */
@@ -28,6 +33,11 @@ class AnimationComponent :
      * Time in seconds that every frame will last.
      */
     var frameDuration: Float = 0f
+
+    /**
+     * Determines how the animation frames are looped.
+     */
+    var playMode = PlayMode.NORMAL
 
     private var currentFrame: Int = 0
     private var time: Float = 0f
@@ -41,7 +51,17 @@ class AnimationComponent :
         while (time > frameDuration) {
             time -= frameDuration
             currentFrame++
-            if (currentFrame == frames.size) currentFrame = 0
+            if (currentFrame == frames.size) { // Last frame was reached
+                when (playMode) {
+                    PlayMode.NORMAL -> {
+                        // Set to last frame
+                        currentFrame = frames.size - 1
+                    }
+                    PlayMode.LOOP -> {
+                        currentFrame = 0
+                    }
+                }
+            }
         }
 
         return currentFrame != previousFrame
@@ -56,6 +76,7 @@ class AnimationComponent :
         frameDuration = 0f
         currentFrame = 0
         time = 0f
+        playMode = PlayMode.NORMAL
     }
 
     companion object {
