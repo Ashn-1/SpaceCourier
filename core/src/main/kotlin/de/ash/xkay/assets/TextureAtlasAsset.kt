@@ -50,7 +50,6 @@ enum class AtlasAsset(
     STAR_RED(TextureAtlasAsset.GRAPHICS, "star_red"),
 
     // Misc textures
-    EXPLOSION(TextureAtlasAsset.GRAPHICS, "explosion"),
 
     /*
     UI
@@ -63,6 +62,7 @@ enum class AtlasAnimationAsset(
     val regionName: String
 ) {
     ENGINE_FIRE(TextureAtlasAsset.GRAPHICS, "engine_fire"),
+    EXPLOSION(TextureAtlasAsset.GRAPHICS, "explosion")
 }
 
 operator fun AssetStorage.get(asset: TextureAtlasAsset) = get(asset.descriptor)

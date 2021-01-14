@@ -4,6 +4,7 @@ import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
+import de.ash.xkay.assets.AtlasAnimationAsset
 import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.assets.TextureAsset
 import de.ash.xkay.assets.get
@@ -53,8 +54,13 @@ class CollisionSystem(
 
                         // Add explosion entity
                         engine.entity {
+                            val animation = with<AnimationComponent> {
+                                frames = assets[AtlasAnimationAsset.EXPLOSION]
+                                frameDuration = 0.9f / frames.size
+                            }
+
                             val graphic = with<GraphicComponent> {
-                                setSprite(assets[AtlasAsset.EXPLOSION])
+                                setSprite(animation.getCurrentFrame())
                             }
 
                             with<TransformComponent> {

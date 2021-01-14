@@ -15,7 +15,9 @@ import java.time.Duration
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-class AnimationComponent : Component, Pool.Poolable {
+class AnimationComponent :
+    Component,
+    Pool.Poolable {
 
     /**
      * Contains the [TextureRegion]'s that are the frames of the animation.
