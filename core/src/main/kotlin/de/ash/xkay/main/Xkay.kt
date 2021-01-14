@@ -79,7 +79,7 @@ class Xkay : KtxGame<XkayScreen>() {
             addSystem(SpawnSystem(assets, gameViewport).apply { setProcessing(false) })
             addSystem(MovementSystem(eventManager, gameViewport))
             addSystem(AttachSystem())
-            addSystem(CollisionSystem(assets))
+            addSystem(CollisionSystem(assets, audioService))
             addSystem(AnimationSystem())
             addSystem(RenderSystem(
                     batch,
@@ -102,6 +102,11 @@ class Xkay : KtxGame<XkayScreen>() {
         // Start loading screen
         addScreen(LoadingScreen(this))
         setScreen<LoadingScreen>()
+    }
+
+    override fun render() {
+        super.render()
+        audioService.update()
     }
 
     override fun dispose() {

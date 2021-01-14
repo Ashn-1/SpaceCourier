@@ -146,3 +146,29 @@ fun Engine.createStar(
         }
     }
 }
+
+fun Engine.createExplosion(
+    assets: AssetStorage,
+    x: Float,
+    y: Float
+) : Entity {
+    return entity {
+        val animation = with<AnimationComponent> {
+            frames = assets[AtlasAnimationAsset.EXPLOSION]
+            frameDuration = 0.9f / frames.size
+        }
+
+        val graphic = with<GraphicComponent> {
+            setSprite(animation.getCurrentFrame())
+        }
+
+        with<TransformComponent> {
+            setInitialPosition(x, y)
+            size.set(graphic.sprite.width, graphic.sprite.height)
+        }
+
+        with<RemoveComponent> {
+            delay = 0.9f
+        }
+    }
+}

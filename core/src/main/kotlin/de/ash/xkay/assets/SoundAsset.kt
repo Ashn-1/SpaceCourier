@@ -21,7 +21,7 @@ enum class SoundAsset(
     val descriptor: AssetDescriptor<Sound> = AssetDescriptor("$directory/$fileName", Sound::class.java)
 ) {
 
-
+    EXPLOSION("explosion.wav"),
 
 }
 

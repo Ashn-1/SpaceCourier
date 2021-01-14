@@ -6,10 +6,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.sun.corba.se.impl.orbutil.graph.Graph
-import de.ash.xkay.assets.AtlasAnimationAsset
-import de.ash.xkay.assets.AtlasAsset
-import de.ash.xkay.assets.MusicAsset
-import de.ash.xkay.assets.get
+import de.ash.xkay.assets.*
 import de.ash.xkay.ecs.components.AnimationComponent
 import de.ash.xkay.ecs.components.GraphicComponent
 import de.ash.xkay.ecs.components.TransformComponent

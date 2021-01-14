@@ -4,11 +4,10 @@ import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
-import de.ash.xkay.assets.AtlasAnimationAsset
-import de.ash.xkay.assets.AtlasAsset
-import de.ash.xkay.assets.TextureAsset
-import de.ash.xkay.assets.get
+import de.ash.xkay.assets.*
+import de.ash.xkay.audio.AudioService
 import de.ash.xkay.ecs.components.*
+import de.ash.xkay.ecs.createExplosion
 import ktx.ashley.*
 import ktx.assets.async.AssetStorage
 
@@ -19,7 +18,8 @@ import ktx.assets.async.AssetStorage
  * @author Cpt-Ash (Ahmad Haidari)
  */
 class CollisionSystem(
-    private val assets: AssetStorage
+    private val assets: AssetStorage,
+    private val audioService: AudioService
 ) : IteratingSystem(
     allOf(HitboxComponent::class)
         .exclude(RemoveComponent::class)
@@ -53,25 +53,8 @@ class CollisionSystem(
                         entity[GraphicComponent.mapper]?.sprite?.setAlpha(0f)
 
                         // Add explosion entity
-                        engine.entity {
-                            val animation = with<AnimationComponent> {
-                                frames = assets[AtlasAnimationAsset.EXPLOSION]
-                                frameDuration = 0.9f / frames.size
-                            }
-
-                            val graphic = with<GraphicComponent> {
-                                setSprite(animation.getCurrentFrame())
-                            }
-
-                            with<TransformComponent> {
-                                setInitialPosition(hitbox.x, hitbox.y)
-                                size.set(graphic.sprite.width, graphic.sprite.height)
-                            }
-
-                            with<RemoveComponent> {
-                                delay = 0.9f
-                            }
-                        }
+                        engine.createExplosion(assets, hitbox.x, hitbox.y)
+                        audioService.play(SoundAsset.EXPLOSION)
 
                         // Vibrate the phone
                         Gdx.input.vibrate(500)
