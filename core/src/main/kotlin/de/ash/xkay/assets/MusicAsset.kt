@@ -21,7 +21,8 @@ enum class MusicAsset(
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
 
-
+    WAVES_IN_FLIGHT("waves_in_flight.mp3"),
+    MISSION_OVER("mission_over.mp3"),
 
 }
 

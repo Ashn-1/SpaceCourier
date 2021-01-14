@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.TimeUtils
 import de.ash.xkay.assets.AtlasAsset
+import de.ash.xkay.assets.MusicAsset
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ui.LabelStyles
 import ktx.actors.plus
@@ -69,6 +70,8 @@ class GameOverScreen(game: Xkay) : XkayScreen(game) {
                 pack()
             }
         }
+
+        audioService.play(MusicAsset.MISSION_OVER, loop = false)
 
         restartTimer = TimeUtils.millis()
     }
