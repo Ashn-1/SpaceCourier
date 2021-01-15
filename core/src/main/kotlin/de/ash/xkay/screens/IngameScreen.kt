@@ -28,6 +28,8 @@ import ktx.scene2d.*
 import kotlin.math.min
 
 /**
+ * Actual game screen with gameplay.
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
@@ -40,29 +42,41 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
      */
     private val maxDeltaTime = 1 / 20f
 
-    private val engine = game.engine
-
+    /**
+     * Indicates that the player died and the game should be reset
+     */
     private var isGameOver = false
 
-    // UI variables
+    private val engine = game.engine
+
+    /**
+     * Contains the current score of the player
+     */
     private lateinit var scoreLabel: Label
 
+
     override fun show() {
+
+        // Event listener registering
         eventManager.run {
             register(GameEvent.PlayerDeathEvent::class, this@IngameScreen)
             register(GameEvent.HighscoreChangedEvent::class, this@IngameScreen)
         }
 
+        // Activate spawning of obstacles
         engine.getSystem<SpawnSystem>().setProcessing(true)
 
+        // Add everything that is needed for the game
         reset()
 
+        // Add UI to the stage
         stage.actors {
             table {
                 defaults().fillX().expandX()
 
                 align(Align.topLeft)
 
+                // Score stack
                 stack {
                     image(AtlasAsset.LOADING_BAR.regionName)
 
@@ -86,19 +100,25 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     }
 
     override fun hide() {
+        // Stop music
         audioService.stop()
 
+        // Clean up the entity engine
         engine.removeAllEntities()
         engine.getSystem<SpawnSystem>().setProcessing(false)
 
+        // Clear the UI
         stage.clear()
 
+        // Unregister the event listener
         eventManager.unregister(this)
     }
 
     override fun render(delta: Float) {
+        // Update the entity engine with a capped delta time
         engine.update(min(delta, maxDeltaTime))
 
+        // Reset the game if it is over -> usually after returning from the game over screen
         if (isGameOver) {
             if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                 reset()
@@ -107,14 +127,17 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     }
 
     private fun reset() {
+        // Add all neccessary entities
         engine.removeAllEntities()
         engine.createPlayer(assets, gameViewport)
         repeat(25) {
             engine.createStar(AtlasAsset.STAR_WHITE, assets, gameViewport, onGameScreen = true)
         }
 
+        // Reset the game over flag
         isGameOver = false
 
+        // Start the game music
         audioService.play(MusicAsset.WAVES_IN_FLIGHT)
 
         logger.debug { "Game was reset" }
