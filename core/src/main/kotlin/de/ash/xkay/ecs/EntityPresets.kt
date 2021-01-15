@@ -32,7 +32,7 @@ fun Engine.createPlayer(
         }
 
         val transform = with<TransformComponent> {
-            setInitialPosition(gameViewport.worldWidth * 0.5f, gameViewport.worldHeight * 0.25f)
+            setInitialPosition(gameViewport.worldWidth * 0.5f, gameViewport.worldHeight * 0.33f)
             size.set(graphic.sprite.width, graphic.sprite.height)
         }
 
