@@ -87,8 +87,8 @@ class MovementSystem(
 
             // Increase player highscore
             it.highscore += (pointsPerSecond * deltaTime)
-            eventManager.dispatchEvent(GameEvent.HighscoreChangedEvent.apply {
-                newHighscore = it.highscore.toInt()
+            eventManager.dispatchEvent(GameEvent.ScoreChangedEvent.apply {
+                score = it.highscore.toInt()
             })
         }
 

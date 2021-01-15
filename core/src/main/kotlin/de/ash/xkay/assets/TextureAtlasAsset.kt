@@ -55,6 +55,9 @@ enum class AtlasAsset(
     UI
      */
     LOADING_BAR(TextureAtlasAsset.UI, "loading_bar"),
+    LABEL_FRAME(TextureAtlasAsset.UI, "label_frame"),
+    AUDIO_ENABLED(TextureAtlasAsset.UI, "audio_enabled"),
+    AUDIO_DISABLED(TextureAtlasAsset.UI, "audio_disabled"),
 }
 
 enum class AtlasAnimationAsset(

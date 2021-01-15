@@ -29,7 +29,7 @@ class DefaultAudioService(
         set (value) {
             when (value) {
                 true -> currentMusic?.play()
-                false -> currentMusic?.play()
+                false -> currentMusic?.stop()
             }
             field = value
         }

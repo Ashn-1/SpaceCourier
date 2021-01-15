@@ -1,17 +1,15 @@
 package de.ash.xkay.screens
 
 import ashutils.ktx.ashLogger
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.TimeUtils
-import de.ash.xkay.assets.AtlasAsset
 import de.ash.xkay.assets.MusicAsset
+import de.ash.xkay.main.PreferenceKeys
 import de.ash.xkay.main.Xkay
-import de.ash.xkay.ui.LabelStyles
-import ktx.actors.plus
-import ktx.scene2d.*
+import de.ash.xkay.ui.GameOverUI
+import ktx.actors.onChangeEvent
+import ktx.actors.plusAssign
+import ktx.log.debug
+import ktx.preferences.flush
+import ktx.preferences.set
 
 /**
  * TODO add docs
@@ -28,52 +26,33 @@ class GameOverScreen(game: Xkay) : XkayScreen(game) {
     var score: Int = 0
     var highscore: Int = 0
 
-    private var restartTimer: Long = 0L
-
-    private lateinit var restartLabel: Label
+    private val ui = GameOverUI().apply {
+        restartButton.onChangeEvent {
+            restart()
+        }
+    }
 
     override fun show() {
-        stage.actors {
-            table {
-                defaults().fillX().expandX()
+        // Update highscore if neccessary
+        val isNewHighscore = score > highscore
+        if (isNewHighscore) {
+            logger.debug { "New highscore -> old: $highscore, new: $score" }
 
-                // New highscore label
-                if (highscore < score) {
-                    label("New Highscore!", LabelStyles.DEFAULT.name) {
-                        setAlignment(Align.center)
-                    }
-                    row()
-                }
-
-                // Score
-                stack { cell ->
-                    image(AtlasAsset.LOADING_BAR.regionName)
-                    label("Score: $score", LabelStyles.DEFAULT.name) {
-                        setAlignment(Align.center)
-                    }
-                    cell.padLeft(5f).padRight(5f)
-                }
-                row()
-
-                // Restart message
-                restartLabel = label("Touch to Restart", LabelStyles.DEFAULT.name) {
-                    wrap = true
-                    setAlignment(Align.center)
-                    isVisible = false
-                    color.a = 0f
-                    addAction(Actions.forever(Actions.sequence(
-                        Actions.fadeIn(0.5f) + Actions.fadeOut(0.5f)
-                    )))
-                }
-
-                setFillParent(true)
-                pack()
+            // Save the new highscore
+            preferences.flush {
+                this[PreferenceKeys.HIGHSCORE.name] = score
             }
         }
 
-        audioService.play(MusicAsset.MISSION_OVER, loop = false)
+        // Setup UI
+        ui.run {
+            scoreLabel.setText("Score: $score")
+            if (isNewHighscore) newHighscoreLabel.isVisible = true
+            stage += this.table
+        }
 
-        restartTimer = TimeUtils.millis()
+        // Play game over music
+        audioService.play(MusicAsset.MISSION_OVER, loop = false)
     }
 
     override fun hide() {
@@ -82,13 +61,9 @@ class GameOverScreen(game: Xkay) : XkayScreen(game) {
 
     override fun render(delta: Float) {
         engine.update(delta)
+    }
 
-        // Enable restarting after 2 seconds
-        if (TimeUtils.timeSinceMillis(restartTimer) > 2000L) {
-            restartLabel.isVisible = true
-            if (Gdx.input.justTouched()) {
-                game.setScreen<IngameScreen>()
-            }
-        }
+    private fun restart() {
+        game.setScreen<IngameScreen>()
     }
 }

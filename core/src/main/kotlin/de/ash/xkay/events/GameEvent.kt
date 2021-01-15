@@ -14,9 +14,9 @@ sealed class GameEvent {
         override fun toString() = "PlayerDeathEvent (highscore = $score)"
     }
 
-    object HighscoreChangedEvent : GameEvent() {
-        var newHighscore: Int = 0
+    object ScoreChangedEvent : GameEvent() {
+        var score: Int = 0
 
-        override fun toString() = "HighscoreChangedEvent (newHighscore = $newHighscore"
+        override fun toString() = "ScoreChangedEvent (score = $score"
     }
 }

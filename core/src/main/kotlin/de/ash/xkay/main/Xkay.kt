@@ -49,6 +49,7 @@ class Xkay : KtxGame<XkayScreen>() {
     val batch: SpriteBatch by lazy { SpriteBatch() }
     val shapeRenderer: ShapeRenderer by lazy { ShapeRenderer() }
 
+    // Contains all the input processors
     val inputs = InputMultiplexer()
 
     // UI

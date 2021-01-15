@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import de.ash.xkay.assets.*
+import de.ash.xkay.main.PreferenceKeys
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ui.LabelStyles
 import de.ash.xkay.ui.createSkin
@@ -23,6 +24,8 @@ import ktx.collections.gdxArrayOf
 import ktx.log.debug
 import ktx.scene2d.*
 import ktx.actors.*
+import ktx.preferences.get
+import ktx.preferences.set
 
 /**
  * Initial state of the game. Here all the assets for the game are loaded and all states are created.
@@ -66,6 +69,9 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
             logger.debug { "Done loading in ${System.currentTimeMillis() - loadingStartTime} ms" }
             assetsLoaded()
         }
+
+        // Load preferences
+        audioService.enabled = preferences[PreferenceKeys.IS_AUDIO_ENABLED.name, true]
 
         // Continue to setup UI, etc. while the assets are loaded
         setupUI()

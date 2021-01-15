@@ -4,16 +4,39 @@ size: 256,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-loading_bar
+audio_disabled
+  rotate: false
+  xy: 131, 121
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+audio_enabled
   rotate: false
   xy: 1, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+label_frame
+  rotate: false
+  xy: 131, 139
+  size: 24, 22
+  split: 9, 9, 8, 8
+  pad: 0, 0, 0, 0
+  orig: 24, 22
+  offset: 0, 0
+  index: -1
+loading_bar
+  rotate: false
+  xy: 1, 19
   size: 40, 12
   orig: 40, 12
   offset: 0, 0
   index: -1
 test
   rotate: false
-  xy: 1, 15
+  xy: 1, 33
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

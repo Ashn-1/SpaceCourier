@@ -3,28 +3,23 @@ package de.ash.xkay.screens
 import ashutils.ktx.ashLogger
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.utils.Align
-import com.sun.corba.se.impl.orbutil.graph.Graph
 import de.ash.xkay.assets.*
-import de.ash.xkay.ecs.components.AnimationComponent
-import de.ash.xkay.ecs.components.GraphicComponent
-import de.ash.xkay.ecs.components.TransformComponent
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ecs.createPlayer
 import de.ash.xkay.ecs.createStar
 import de.ash.xkay.ecs.systems.SpawnSystem
 import de.ash.xkay.events.GameEvent
 import de.ash.xkay.events.GameEventListener
-import de.ash.xkay.ui.LabelStyles
-import ktx.ashley.entity
+import de.ash.xkay.main.PreferenceKeys
+import de.ash.xkay.ui.IngameUI
+import ktx.actors.onChangeEvent
 import ktx.ashley.getSystem
-import ktx.ashley.with
 import ktx.log.debug
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.*
+import ktx.actors.plusAssign
 import kotlin.math.min
 
 /**
@@ -49,10 +44,14 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
     private val engine = game.engine
 
-    /**
-     * Contains the current score of the player
-     */
-    private lateinit var scoreLabel: Label
+    private val ui = IngameUI().apply {
+        audioButton.onChangeEvent {
+            audioService.enabled = !this.isChecked
+            preferences.flush {
+                this[PreferenceKeys.IS_AUDIO_ENABLED.name] = audioService.enabled
+            }
+        }
+    }
 
 
     override fun show() {
@@ -60,7 +59,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         // Event listener registering
         eventManager.run {
             register(GameEvent.PlayerDeathEvent::class, this@IngameScreen)
-            register(GameEvent.HighscoreChangedEvent::class, this@IngameScreen)
+            register(GameEvent.ScoreChangedEvent::class, this@IngameScreen)
         }
 
         // Activate spawning of obstacles
@@ -69,31 +68,9 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         // Add everything that is needed for the game
         reset()
 
-        // Add UI to the stage
-        stage.actors {
-            table {
-                defaults().fillX().expandX()
-
-                align(Align.topLeft)
-
-                // Score stack
-                stack {
-                    image(AtlasAsset.LOADING_BAR.regionName)
-
-                    horizontalGroup {
-                        label("Score: ", LabelStyles.DEFAULT.name) {
-                            setAlignment(Align.left)
-                        }
-                        scoreLabel = label("", LabelStyles.DEFAULT.name) {
-                            setAlignment(Align.left)
-                        }
-                    }
-                }
-                row()
-
-                setFillParent(true)
-                pack()
-            }
+        ui.run {
+            audioButton.isChecked = !audioService.enabled
+            stage += this.table
         }
 
         logger.debug { "Ingame entered" }
@@ -152,25 +129,15 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
                 // Setup the game over screen
                 game.getScreen<GameOverScreen>().run {
                     score = gameEvent.score
-                    highscore = preferences["highscore", 0]
-                }
-
-                // Update highscore if highest score ever
-                if (gameEvent.score > preferences["highscore", 0]) {
-                    logger.debug { "New highscore -> old: ${preferences["highscore", 0]}, new: ${gameEvent.score}" }
-
-                    // Save the new highscore
-                    preferences.flush {
-                        this["highscore"] = gameEvent.score
-                    }
+                    highscore = preferences[PreferenceKeys.HIGHSCORE.name, 0]
                 }
 
                 // Switch to the game over screen
                 game.setScreen<GameOverScreen>()
             }
-            is GameEvent.HighscoreChangedEvent -> {
-                // Change UI to show updated highscore
-                scoreLabel.setText(gameEvent.newHighscore)
+            is GameEvent.ScoreChangedEvent -> {
+                // Change UI to show updated score
+                ui.scoreLabel.setText(gameEvent.score)
             }
         }
     }
