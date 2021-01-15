@@ -73,9 +73,7 @@ class DefaultAudioService(
 
     override fun play(musicAsset: MusicAsset, volume: Float, loop: Boolean) {
 
-        if (currentMusic != null) {
-            currentMusic?.stop()
-        }
+        currentMusic?.stop()
 
         if (musicAsset.descriptor !in assets) {
             logger.error { "Music $musicAsset is not loaded" }
