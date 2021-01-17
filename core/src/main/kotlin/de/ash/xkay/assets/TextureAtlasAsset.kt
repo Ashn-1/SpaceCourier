@@ -50,6 +50,7 @@ enum class AtlasAsset(
     STAR_RED(TextureAtlasAsset.GRAPHICS, "star_red"),
 
     // Misc textures
+    SHIELD(TextureAtlasAsset.GRAPHICS, "shield"),
 
     /*
     UI

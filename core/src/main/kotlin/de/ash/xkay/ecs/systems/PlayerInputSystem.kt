@@ -11,20 +11,22 @@ import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
-import de.ash.xkay.main.XkayRuntimeException
 import de.ash.xkay.ecs.components.PlayerComponent
 import de.ash.xkay.ecs.components.RemoveComponent
 import de.ash.xkay.ecs.components.TransformComponent
 import de.ash.xkay.ecs.components.VelocityComponent
+import de.ash.xkay.ecs.createShield
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
+import ktx.assets.async.AssetStorage
 import ktx.log.debug
 import ktx.log.error
-import ktx.math.vec2
-import java.awt.Desktop
-import javax.xml.crypto.dsig.Transform
 import kotlin.math.abs
+import kotlin.math.max
+
+const val SHIELD_ACTIVE_TIME = 2.0f
+const val SHIELD_COOLDOWN = 10.0f
 
 /**
  * Handles the player input and adjusts the player entity accordingly (velocity, skills, etc...).
@@ -33,6 +35,7 @@ import kotlin.math.abs
  * @author Cpt-Ash (Ahmad Haidari)
  */
 class PlayerInputSystem(
+    private val assets: AssetStorage,
     private val gameViewport: Viewport
 ) : IteratingSystem(
     allOf(PlayerComponent::class, TransformComponent::class, VelocityComponent::class)
@@ -51,23 +54,45 @@ class PlayerInputSystem(
 
     private val movementSpeed = 5f
 
-    private var isDoubleClick = false
+    private var activateShield = false
 
     private var isMovingDesktop = false
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        val player = entity[PlayerComponent.mapper]
+        require(player != null) { "Entity $entity does not have a PlayerComponent" }
         val transform = entity[TransformComponent.mapper]
         require(transform != null) { "Entity $entity does not have a TransformComponent" }
         val velocity = entity[VelocityComponent.mapper]?.velocity
         require(velocity != null) { "Entity $entity does not have a VelocityComponent" }
 
-        if (isDoubleClick) {
-            isDoubleClick = false
+        // Shield logic
+        player.shieldCooldown = max(0.0f, player.shieldCooldown - deltaTime)
 
-            // TODO activate shield
-            logger.debug { "Shields are activated" }
+        if (player.isShieldActivated) {
+            player.shieldActiveTime = player.shieldActiveTime - deltaTime
+            if (player.shieldActiveTime < 0.0f) {
+                player.isShieldActivated = false
+                player.shieldActiveTime = 0.0f
+            }
         }
 
+        if (activateShield) {
+            if (player.shieldCooldown == 0.0f) {
+                engine.createShield(assets, entity, SHIELD_ACTIVE_TIME)
+                player.isShieldActivated = true
+                player.shieldActiveTime = SHIELD_ACTIVE_TIME
+                player.shieldCooldown = SHIELD_COOLDOWN
+
+                activateShield = false
+                logger.debug { "Shields are activated" }
+            } else {
+                activateShield = false
+                logger.debug { "Shield is still on cooldown" }
+            }
+        }
+
+        // Movement logic
         when (Gdx.app.type) {
             Application.ApplicationType.Android -> {
                 if (Gdx.input.isTouched) {
@@ -109,7 +134,7 @@ class PlayerInputSystem(
         override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
             if (!isActive()) return false
             if (count >= 2) {
-                isDoubleClick = true
+                activateShield = true
                 return true
             }
             return false
@@ -130,6 +155,9 @@ class PlayerInputSystem(
                     Input.Keys.D, Input.Keys.RIGHT -> {
                         touchPosition.x = gameViewport.worldWidth
                         isMovingDesktop = true
+                    }
+                    Input.Keys.SPACE -> {
+                        activateShield = true
                     }
                     else -> return false
                 }

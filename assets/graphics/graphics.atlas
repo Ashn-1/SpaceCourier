@@ -20,7 +20,7 @@ asteroid_mid_big
   index: -1
 asteroid_mid_small
   rotate: false
-  xy: 107, 19
+  xy: 117, 19
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -41,7 +41,7 @@ engine_fire
   index: 0
 engine_fire
   rotate: false
-  xy: 67, 9
+  xy: 77, 9
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -83,21 +83,21 @@ explosion
   index: 7
 explosion
   rotate: false
-  xy: 117, 19
+  xy: 37, 9
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: 4
 explosion
   rotate: false
-  xy: 47, 9
+  xy: 57, 9
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: 1
 explosion
   rotate: false
-  xy: 57, 9
+  xy: 67, 9
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -109,9 +109,16 @@ null
   orig: 8, 8
   offset: 0, 0
   index: -1
-ship
+shield
   rotate: false
   xy: 97, 19
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+ship
+  rotate: false
+  xy: 107, 19
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -125,7 +132,7 @@ ship_left
   index: -1
 ship_right
   rotate: false
-  xy: 37, 9
+  xy: 47, 9
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -139,14 +146,14 @@ star_grey
   index: -1
 star_red
   rotate: false
-  xy: 83, 13
+  xy: 93, 13
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 star_white
   rotate: false
-  xy: 77, 13
+  xy: 87, 13
   size: 4, 4
   orig: 4, 4
   offset: 0, 0

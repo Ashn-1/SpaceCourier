@@ -34,6 +34,7 @@ fun Engine.createPlayer(
         val transform = with<TransformComponent> {
             setInitialPosition(gameViewport.worldWidth * 0.5f, gameViewport.worldHeight * 0.33f)
             size.set(graphic.sprite.width, graphic.sprite.height)
+            depthLevel = 1
         }
 
         with<HitboxComponent> {
@@ -65,6 +66,24 @@ fun Engine.createPlayer(
     }
 
     return player
+}
+
+fun Engine.createShield(assets: AssetStorage, player: Entity, activeTime: Float) : Entity {
+    return entity {
+        val shieldGraphic = with<GraphicComponent> {
+            setSprite(assets[AtlasAsset.SHIELD])
+        }
+        with<TransformComponent> {
+            size.set(shieldGraphic.sprite.width, shieldGraphic.sprite.height)
+            depthLevel = 2
+        }
+        with<AttachComponent> {
+            entity = player
+        }
+        with<RemoveComponent> {
+            delay = activeTime
+        }
+    }
 }
 
 fun Engine.createAsteroid(
@@ -165,6 +184,7 @@ fun Engine.createExplosion(
         with<TransformComponent> {
             setInitialPosition(x, y)
             size.set(graphic.sprite.width, graphic.sprite.height)
+            depthLevel = 1
         }
 
         with<RemoveComponent> {
