@@ -21,7 +21,7 @@ enum class TextureAsset(
     val descriptor: AssetDescriptor<Texture> = AssetDescriptor("$directory/$fileName", Texture::class.java)
 ) {
 
-    SPACE_BACKGROUND("background.png", "textures"),
+
 
 }
 

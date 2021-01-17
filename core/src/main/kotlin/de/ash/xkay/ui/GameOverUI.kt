@@ -15,16 +15,15 @@ class GameOverUI {
     val table: Table
     val restartButton: Button
     val scoreLabel: Label
-    val newHighscoreLabel: Label
+    val highscoreLabel: Label
 
     init {
         table = scene2d.table {
             defaults().fillX().expandX().pad(0.5f, 5f, 0.5f, 5f)
 
-            newHighscoreLabel = label("New Highscore!", LabelStyles.DEFAULT.name) {
+            highscoreLabel = label("New Highscore!", LabelStyles.DEFAULT.name) {
                 setAlignment(Align.center)
                 wrap = true
-                isVisible = false
             }
             row()
 

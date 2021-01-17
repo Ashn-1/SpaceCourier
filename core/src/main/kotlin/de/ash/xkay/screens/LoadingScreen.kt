@@ -120,11 +120,10 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
     override fun render(delta: Float) {
 
         if (assets.progress.isFinished
-            && Gdx.input.justTouched()
-            && game.containsScreen<IngameScreen>()) {
+            && game.containsScreen<MainMenuScreen>()) {
 
                 // Change the screen and dispose the loading screen
-                game.setScreen<IngameScreen>()
+                game.setScreen<MainMenuScreen>()
                 game.removeScreen<LoadingScreen>()
                 dispose()
         }
@@ -136,6 +135,7 @@ class LoadingScreen(game: Xkay) : XkayScreen(game) {
     }
 
     private fun assetsLoaded() {
+        game.addScreen(MainMenuScreen(game))
         game.addScreen(IngameScreen(game))
         game.addScreen(GameOverScreen(game))
         touchToStart += Actions.forever(Actions.sequence(Actions.fadeIn(0.5f) + Actions.fadeOut(0.5f)))

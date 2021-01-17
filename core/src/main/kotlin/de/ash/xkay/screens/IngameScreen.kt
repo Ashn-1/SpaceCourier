@@ -1,6 +1,7 @@
 package de.ash.xkay.screens
 
 import ashutils.ktx.ashLogger
+import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import de.ash.xkay.assets.*
@@ -20,6 +21,7 @@ import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.*
 import ktx.actors.plusAssign
+import ktx.log.error
 import kotlin.math.min
 
 /**
@@ -44,15 +46,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
     private val engine = game.engine
 
-    private val ui = IngameUI().apply {
-        audioButton.onChangeEvent {
-            audioService.enabled = !this.isChecked
-            preferences.flush {
-                this[PreferenceKeys.IS_AUDIO_ENABLED.name] = audioService.enabled
-            }
-        }
-    }
-
+    private val ui = IngameUI()
 
     override fun show() {
 
@@ -69,8 +63,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         reset()
 
         ui.run {
-            audioButton.isChecked = !audioService.enabled
-            stage += this.table
+            stage += table
         }
 
         logger.debug { "Ingame entered" }
@@ -92,6 +85,24 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
     }
 
     override fun render(delta: Float) {
+
+        when (Gdx.app.type) {
+            Application.ApplicationType.Android -> {
+                if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+                    game.setScreen<MainMenuScreen>()
+                }
+            }
+            Application.ApplicationType.Desktop -> {
+                if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+                    game.setScreen<MainMenuScreen>()
+                }
+            }
+            else -> {
+                logger.error { "OS not supported" }
+            }
+        }
+
+
         // Update the entity engine with a capped delta time
         engine.update(min(delta, maxDeltaTime))
 
@@ -137,7 +148,7 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
             }
             is GameEvent.ScoreChangedEvent -> {
                 // Change UI to show updated score
-                ui.scoreLabel.setText(gameEvent.score)
+                ui.scoreLabel.setText("Score: ${gameEvent.score}")
             }
         }
     }

@@ -4,6 +4,7 @@ import ashutils.ktx.ashLogger
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -30,7 +31,7 @@ import ktx.log.info
  * @author Cpt-Ash (Ahmad Haidari)
  */
 
-const val DEBUG = false
+const val DEBUG = true
 const val UNIT_SCALE = 1 / 8f
 const val GAME_SCREEN_WIDTH = 9f
 const val GAME_SCREEN_HEIGHT = 16f
@@ -75,6 +76,7 @@ class Xkay : KtxGame<XkayScreen>() {
         PooledEngine().apply {
             val playerInput = PlayerInputSystem(gameViewport)
             inputs.addProcessor(1, playerInput.playerGestureDetection)
+            inputs.addProcessor(2, playerInput.playerInput)
             addSystem(playerInput)
             addSystem(PlayerAnimationSystem(assets))
             addSystem(SpawnSystem(assets, gameViewport).apply { setProcessing(false) })
@@ -97,6 +99,9 @@ class Xkay : KtxGame<XkayScreen>() {
     override fun create() {
         Gdx.app.logLevel = Logger.DEBUG
         logger.info { "Starting game" }
+
+        // Catch back button
+        Gdx.input.setCatchKey(Input.Keys.BACK, true)
 
         Gdx.input.inputProcessor = inputs
 

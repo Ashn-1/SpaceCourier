@@ -8,6 +8,7 @@ import de.ash.xkay.ui.GameOverUI
 import ktx.actors.onChangeEvent
 import ktx.actors.plusAssign
 import ktx.log.debug
+import ktx.log.info
 import ktx.preferences.flush
 import ktx.preferences.set
 
@@ -36,7 +37,7 @@ class GameOverScreen(game: Xkay) : XkayScreen(game) {
         // Update highscore if neccessary
         val isNewHighscore = score > highscore
         if (isNewHighscore) {
-            logger.debug { "New highscore -> old: $highscore, new: $score" }
+            logger.info { "New highscore -> old: $highscore, new: $score" }
 
             // Save the new highscore
             preferences.flush {
@@ -47,7 +48,8 @@ class GameOverScreen(game: Xkay) : XkayScreen(game) {
         // Setup UI
         ui.run {
             scoreLabel.setText("Score: $score")
-            if (isNewHighscore) newHighscoreLabel.isVisible = true
+            if (isNewHighscore) highscoreLabel.setText("New Highscore!")
+            else highscoreLabel.setText("Current Highscore: $highscore")
             stage += this.table
         }
 

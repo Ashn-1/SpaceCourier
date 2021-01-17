@@ -20,11 +20,15 @@ import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
 import ktx.log.debug
+import ktx.log.error
 import ktx.math.vec2
+import java.awt.Desktop
 import javax.xml.crypto.dsig.Transform
 import kotlin.math.abs
 
 /**
+ * Handles the player input and adjusts the player entity accordingly (velocity, skills, etc...).
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
@@ -35,20 +39,11 @@ class PlayerInputSystem(
         .exclude(RemoveComponent::class)
         .get()
 ) {
-
-    /*
-    private enum class Direction {
-        NONE,
-        LEFT,
-        RIGHT
-    }
-    */
-
     private val logger = ashLogger("InputSys")
 
     val playerGestureDetection = GestureDetector(PlayerGestureListener())
 
-    //private var lastTouchDirection = Direction.NONE
+    val playerInput = PlayerInputAdapter()
 
     private val touchPosition = Vector2()
 
@@ -57,6 +52,8 @@ class PlayerInputSystem(
     private val movementSpeed = 5f
 
     private var isDoubleClick = false
+
+    private var isMovingDesktop = false
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
@@ -71,78 +68,42 @@ class PlayerInputSystem(
             logger.debug { "Shields are activated" }
         }
 
-        if (Gdx.input.isTouched) {
-            // Get touch position and unproject them
-            touchPosition.x = Gdx.input.x.toFloat()
-            gameViewport.unproject(touchPosition)
-
-            // Set velocity of the player
-            velocity.x = MathUtils.clamp(touchPosition.x - transform.position.x, -movementSpeed, movementSpeed)
-            if (abs(velocity.x) < touchTolerance) {
-                velocity.x = 0f
-            }
-        } else {
-            // Stop movement
-            velocity.x = 0f
-        }
-
-        /* OLD INPUT HANDLING
-        // Check in which direction the player should move
-        val touchPos1 = vec2(x = Gdx.input.getX(0).toFloat())
-        val touchPos2 = vec2(x = Gdx.input.getX(1).toFloat())
-
-        // Convert screen coordinates to world coordinates
-        gameViewport.unproject(touchPos1)
-        gameViewport.unproject(touchPos2)
-
-        // Check which side were pressed
-        val isLeftPressed =
-            ((Gdx.input.isTouched(0) && touchPos1.x < gameViewport.worldWidth / 2) || Gdx.input.isTouched(1) && touchPos2.x < gameViewport.worldWidth / 2)
-        val isRightPressed =
-            ((Gdx.input.isTouched(0) && touchPos1.x >= gameViewport.worldWidth / 2) || Gdx.input.isTouched(1) && touchPos2.x >= gameViewport.worldWidth / 2)
-
-        // Inputs are handled differently for different operating systems
         when (Gdx.app.type) {
-            Application.ApplicationType.Android, Application.ApplicationType.Desktop -> {
-                when { // Split according to the side that was pressed
-                    !isLeftPressed && !isRightPressed -> { // No press
-                        velocity.velocity.x = 0f
-                        lastTouchDirection = Direction.NONE
-                    }
-                    !isLeftPressed && isRightPressed -> { // Only right press
-                        velocity.velocity.x = movementSpeed
-                        lastTouchDirection = Direction.RIGHT
-                    }
-                    isLeftPressed && !isRightPressed -> { // Only left press
-                        velocity.velocity.x = -movementSpeed
-                        lastTouchDirection = Direction.LEFT
-                    }
-                    else -> { // Both pressed, which needs special handling
-                        when (lastTouchDirection) { // Direction dependend on which side was pressed first
-                            Direction.LEFT -> { // Left was pressed first and then right
-                                velocity.velocity.x = movementSpeed // -> go right because latest touch
-                                lastTouchDirection = Direction.NONE
-                            }
-                            Direction.RIGHT -> { // Right was pressed first and then right
-                                velocity.velocity.x = -movementSpeed // -> go left because latest touch
-                                lastTouchDirection = Direction.NONE
-                            }
-                            else -> {
-                            }
-                        }
-                    }
+            Application.ApplicationType.Android -> {
+                if (Gdx.input.isTouched) {
+                    // Get touch position and unproject them
+                    touchPosition.x = Gdx.input.x.toFloat()
+                    gameViewport.unproject(touchPosition)
+
+                    setPlayerVelocity(transform.position, velocity)
+                } else {
+                    // Stop movement
+                    velocity.x = 0f
                 }
             }
-
-            else -> throw XkayRuntimeException("OS ${Gdx.app.type} not supported")
+            Application.ApplicationType.Desktop -> {
+                if (isMovingDesktop) {
+                    setPlayerVelocity(transform.position, velocity)
+                } else {
+                    velocity.x = 0f
+                }
+            }
+            else -> logger.error { "OS not supported" }
         }
-        */
+    }
+
+    private fun setPlayerVelocity(position: Vector2, velocity: Vector2) {
+        velocity.x = MathUtils.clamp(touchPosition.x - position.x, -movementSpeed, movementSpeed)
+        if (abs(velocity.x) < touchTolerance) {
+            velocity.x = 0f
+        }
     }
 
     /**
      * True only if a player entity is in the engine -> only the case during the IngameScreen
      */
     fun isActive() = entities.size() > 0
+
 
     inner class PlayerGestureListener : GestureDetector.GestureAdapter() {
         override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
@@ -152,6 +113,47 @@ class PlayerInputSystem(
                 return true
             }
             return false
+        }
+    }
+
+
+    inner class PlayerInputAdapter : InputAdapter() {
+        override fun keyDown(keycode: Int): Boolean {
+            if (!isActive()) return false
+
+            if (Gdx.app.type == Application.ApplicationType.Desktop) {
+                when (keycode) {
+                    Input.Keys.A, Input.Keys.LEFT -> {
+                        touchPosition.x = 0.0f
+                        isMovingDesktop = true
+                    }
+                    Input.Keys.D, Input.Keys.RIGHT -> {
+                        touchPosition.x = gameViewport.worldWidth
+                        isMovingDesktop = true
+                    }
+                    else -> return false
+                }
+            }
+            return true
+        }
+
+        override fun keyUp(keycode: Int): Boolean {
+            if (!isActive()) return false
+
+            if (Gdx.app.type == Application.ApplicationType.Desktop) {
+                when (keycode) {
+                    Input.Keys.A, Input.Keys.LEFT -> {
+                        if (touchPosition.x == 0.0f)
+                            isMovingDesktop = false
+                    }
+                    Input.Keys.D, Input.Keys.RIGHT -> {
+                        if (touchPosition.x == gameViewport.worldWidth)
+                            isMovingDesktop = false
+                    }
+                    else -> return false
+                }
+            }
+            return true
         }
     }
 }
