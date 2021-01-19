@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
 /**
+ * Indicates that the entity has a shield and thus higher ranking in the collision handling.
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
@@ -24,6 +26,6 @@ class ShieldComponent : Component, Pool.Poolable {
         val mapper = mapperFor<ShieldComponent>()
 
         const val SHIELD_COOLDOWN = 5f
-        const val SHIELD_ACTIVE_TIME = 2.5f
+        const val SHIELD_ACTIVE_TIME = 1f
     }
 }

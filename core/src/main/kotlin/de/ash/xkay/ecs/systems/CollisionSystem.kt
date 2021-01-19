@@ -35,10 +35,7 @@ class CollisionSystem(
         // Check collision of player entity with all other entities
         entity[PlayerComponent.mapper]?.let {
 
-            // Skip collision detection if shield is active
-            if (entity[ShieldComponent.mapper]?.isActive() == true) {
-                return
-            }
+            val isShieldActive: Boolean = entity[ShieldComponent.mapper]?.isActive() ?: false
 
             // Check hitbox against all other hitboxes in the game
             for (otherEntity in entities) {
@@ -47,23 +44,30 @@ class CollisionSystem(
 
                 // Check collision if other entity has hitbox
                 otherEntity[HitboxComponent.mapper]?.let { other ->
+                    // Check if a collision between the two entities happened
                     if (hitbox.overlaps(other.hitbox)) {
-                        // Player collided with obstacle -> kill him
+                        // Handle collision depending on player shield status
+                        if (isShieldActive) { // -> destroy other entity
+                            otherEntity.addComponent<RemoveComponent>(engine)
+                            audioService.play(SoundAsset.EXPLOSION)
+                            Gdx.input.vibrate(100)
 
-                        // Schedule player entity for removal
-                        entity.addComponent<RemoveComponent>(engine) {
-                            delay = 1f
+                        } else { // -> kill player
+                            // Schedule player entity for removal
+                            entity.addComponent<RemoveComponent>(engine) {
+                                delay = 1f
+                            }
+
+                            // Set player to invisible
+                            entity[GraphicComponent.mapper]?.sprite?.setAlpha(0f)
+
+                            // Add explosion entity
+                            engine.createExplosion(assets, hitbox.x, hitbox.y)
+                            audioService.play(SoundAsset.EXPLOSION)
+
+                            // Vibrate the phone
+                            Gdx.input.vibrate(500)
                         }
-
-                        // Set player to invisible
-                        entity[GraphicComponent.mapper]?.sprite?.setAlpha(0f)
-
-                        // Add explosion entity
-                        engine.createExplosion(assets, hitbox.x, hitbox.y)
-                        audioService.play(SoundAsset.EXPLOSION)
-
-                        // Vibrate the phone
-                        Gdx.input.vibrate(500)
                     }
                 }
             }
