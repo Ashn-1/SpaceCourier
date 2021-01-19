@@ -12,15 +12,8 @@ class PlayerComponent : Component, Pool.Poolable {
 
     var highscore = 0.0f
 
-    var isShieldActivated = false
-    var shieldCooldown = 0.0f
-    var shieldActiveTime = 0.0f
-
     override fun reset() {
         highscore = 0.0f
-        isShieldActivated = false
-        shieldCooldown = 0.0f
-        shieldActiveTime = 0.0f
     }
 
     companion object {

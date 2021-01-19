@@ -11,22 +11,14 @@ import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
-import de.ash.xkay.ecs.components.PlayerComponent
-import de.ash.xkay.ecs.components.RemoveComponent
-import de.ash.xkay.ecs.components.TransformComponent
-import de.ash.xkay.ecs.components.VelocityComponent
+import de.ash.xkay.ecs.components.*
 import de.ash.xkay.ecs.createShield
-import ktx.ashley.allOf
-import ktx.ashley.exclude
-import ktx.ashley.get
+import ktx.ashley.*
 import ktx.assets.async.AssetStorage
 import ktx.log.debug
 import ktx.log.error
 import kotlin.math.abs
 import kotlin.math.max
-
-const val SHIELD_ACTIVE_TIME = 2.0f
-const val SHIELD_COOLDOWN = 10.0f
 
 /**
  * Handles the player input and adjusts the player entity accordingly (velocity, skills, etc...).
@@ -54,7 +46,7 @@ class PlayerInputSystem(
 
     private val movementSpeed = 5f
 
-    private var activateShield = false
+    private var isShieldButtonPressed = false
 
     private var isMovingDesktop = false
 
@@ -67,29 +59,13 @@ class PlayerInputSystem(
         require(velocity != null) { "Entity $entity does not have a VelocityComponent" }
 
         // Shield logic
-        player.shieldCooldown = max(0.0f, player.shieldCooldown - deltaTime)
-
-        if (player.isShieldActivated) {
-            player.shieldActiveTime = player.shieldActiveTime - deltaTime
-            if (player.shieldActiveTime < 0.0f) {
-                player.isShieldActivated = false
-                player.shieldActiveTime = 0.0f
+        if (isShieldButtonPressed) {
+            if (!entity.has(ShieldComponent.mapper)) {
+                entity.addComponent<ShieldComponent>(engine)
+                engine.createShield(assets, entity, ShieldComponent.SHIELD_ACTIVE_TIME)
+                logger.debug { "Shields activated" }
             }
-        }
-
-        if (activateShield) {
-            if (player.shieldCooldown == 0.0f) {
-                engine.createShield(assets, entity, SHIELD_ACTIVE_TIME)
-                player.isShieldActivated = true
-                player.shieldActiveTime = SHIELD_ACTIVE_TIME
-                player.shieldCooldown = SHIELD_COOLDOWN
-
-                activateShield = false
-                logger.debug { "Shields are activated" }
-            } else {
-                activateShield = false
-                logger.debug { "Shield is still on cooldown" }
-            }
+            isShieldButtonPressed = false
         }
 
         // Movement logic
@@ -134,7 +110,7 @@ class PlayerInputSystem(
         override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
             if (!isActive()) return false
             if (count >= 2) {
-                activateShield = true
+                isShieldButtonPressed = true
                 return true
             }
             return false
@@ -157,7 +133,7 @@ class PlayerInputSystem(
                         isMovingDesktop = true
                     }
                     Input.Keys.SPACE -> {
-                        activateShield = true
+                        isShieldButtonPressed = true
                     }
                     else -> return false
                 }

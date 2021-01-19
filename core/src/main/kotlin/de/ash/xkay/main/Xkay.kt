@@ -74,11 +74,13 @@ class Xkay : KtxGame<XkayScreen>() {
 
     val engine: Engine by lazy {
         PooledEngine().apply {
-            val playerInput = PlayerInputSystem(assets, gameViewport)
-            inputs.addProcessor(1, playerInput.playerGestureDetection)
-            inputs.addProcessor(2, playerInput.playerInput)
+            val playerInput = PlayerInputSystem(assets, gameViewport).apply {
+                inputs.addProcessor(1, playerGestureDetection)
+                inputs.addProcessor(2, playerInput)
+            }
             addSystem(playerInput)
             addSystem(PlayerAnimationSystem(assets))
+            addSystem(ShieldSystem())
             addSystem(SpawnSystem(assets, gameViewport).apply { setProcessing(false) })
             addSystem(MovementSystem(eventManager, gameViewport))
             addSystem(AttachSystem())

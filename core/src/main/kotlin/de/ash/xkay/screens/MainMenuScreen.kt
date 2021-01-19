@@ -1,11 +1,15 @@
 package de.ash.xkay.screens
 
 import ashutils.ktx.ashLogger
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import de.ash.xkay.main.PreferenceKeys
 import de.ash.xkay.main.Xkay
 import de.ash.xkay.ui.MainMenuUI
 import ktx.actors.onChangeEvent
 import ktx.actors.plusAssign
+import ktx.log.error
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
@@ -35,7 +39,11 @@ class MainMenuScreen(game: Xkay) : XkayScreen(game)  {
     }
 
     override fun show() {
-        stage += ui.table
+        ui.run {
+            audioButton.isChecked = !audioService.enabled
+
+            stage += table
+        }
     }
 
     override fun hide() {
@@ -44,6 +52,12 @@ class MainMenuScreen(game: Xkay) : XkayScreen(game)  {
     }
 
     override fun render(delta: Float) {
+        // Escape/Back was pressed
+        if (Gdx.app.type == Application.ApplicationType.Android && Gdx.input.isKeyJustPressed(Input.Keys.BACK)
+            || Gdx.app.type == Application.ApplicationType.Desktop && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit()
+        }
+
         game.engine.update(delta)
     }
 }

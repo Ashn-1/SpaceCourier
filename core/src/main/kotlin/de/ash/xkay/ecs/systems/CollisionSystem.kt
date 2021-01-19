@@ -34,10 +34,12 @@ class CollisionSystem(
 
         // Check collision of player entity with all other entities
         entity[PlayerComponent.mapper]?.let {
+
             // Skip collision detection if shield is active
-            if (it.isShieldActivated) {
+            if (entity[ShieldComponent.mapper]?.isActive() == true) {
                 return
             }
+
             // Check hitbox against all other hitboxes in the game
             for (otherEntity in entities) {
                 // Skip if its the same entity
