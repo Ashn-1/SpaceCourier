@@ -20,8 +20,6 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
 
     val size = Vector2()
 
-    var rotationDeg = 0f
-
     override fun reset() {
         position.set(Vector2.Zero)
         prevPosition.set(Vector2.Zero)
@@ -30,8 +28,6 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         depthLevel = 0
 
         size.set(Vector2.Zero)
-
-        rotationDeg = 0f
     }
 
     fun setInitialPosition(x: Float, y: Float) {

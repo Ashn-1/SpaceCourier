@@ -13,6 +13,8 @@ import ktx.ashley.exclude
 import ktx.ashley.get
 
 /**
+ * Moves the entities [TransformComponent] according to its [VelocityComponent]. The movement is smoothed via linear interpolation of the old position towards the new position.
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
@@ -69,11 +71,6 @@ class MovementSystem(
 
         // Update the position based on the velocity
         transform.position.mulAdd(velocity.velocity, deltaTime)
-
-        // Rotate entities with given component
-        entity[RotateComponent.mapper]?.let {
-            transform.rotationDeg += it.degreesPerSecond * deltaTime
-        }
 
         // Player entity needs some special handling
         entity[PlayerComponent.mapper]?.let { // if not null

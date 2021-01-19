@@ -95,6 +95,7 @@ fun Engine.createAsteroid(
 
         val graphic = with<GraphicComponent> {
             setSprite(assets[asteroid])
+            sprite.rotation = MathUtils.random(360f)
         }
 
         val transform = with<TransformComponent> {
@@ -107,8 +108,6 @@ fun Engine.createAsteroid(
             )
 
             size.set(graphic.sprite.width, graphic.sprite.height)
-
-            rotationDeg = MathUtils.random(360f)
         }
 
         with<VelocityComponent> {

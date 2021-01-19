@@ -11,6 +11,8 @@ import ktx.ashley.remove
 import ktx.log.debug
 
 /**
+ * Updates the shield timers and removes the [ShieldComponent] of an [Entity] if the cooldown of it is over.
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */

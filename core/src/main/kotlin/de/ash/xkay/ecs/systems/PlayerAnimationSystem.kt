@@ -14,6 +14,8 @@ import ktx.ashley.get
 import ktx.assets.async.AssetStorage
 
 /**
+ * Updates the player [GraphicComponent] to hold the correct sprite according to the current player action.
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */

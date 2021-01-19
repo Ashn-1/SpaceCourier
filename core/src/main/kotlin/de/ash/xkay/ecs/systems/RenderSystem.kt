@@ -20,6 +20,8 @@ import ktx.ashley.get
 import ktx.graphics.use
 
 /**
+ * Handles the rendering of the UI and all entities. Entities are only rendered if they have a [GraphicComponent] and a [TransformComponent].
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
@@ -83,7 +85,6 @@ class RenderSystem(
         graphic.sprite.run {
             setCenter(transform.interpolatedPosition.x, transform.interpolatedPosition.y)
             setSize(transform.size.x, transform.size.y)
-            rotation = transform.rotationDeg
             draw(batch)
         }
     }
