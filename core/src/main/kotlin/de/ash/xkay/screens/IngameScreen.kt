@@ -34,19 +34,14 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
     private val logger = ashLogger("Ingame")
 
+    private val engine = game.engine
+
+    private val ui = IngameUI()
+
     /**
      * The maximum delta time that will be used to update the game. This ensures that delta dependent logic will not jump due to lag (i.e. big delta values) or in case low framerates occur.
      */
     private val maxDeltaTime = 1 / 20f
-
-    /**
-     * Indicates that the player died and the game should be reset
-     */
-    private var isGameOver = false
-
-    private val engine = game.engine
-
-    private val ui = IngameUI()
 
     override fun show() {
 
@@ -93,13 +88,6 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
         // Update the entity engine with a capped delta time
         engine.update(min(delta, maxDeltaTime))
-
-        // Reset the game if it is over -> usually after returning from the game over screen
-        if (isGameOver) {
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-                reset()
-            }
-        }
     }
 
     private fun reset() {
@@ -109,9 +97,6 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         repeat(25) {
             engine.createStar(AtlasAsset.STAR_WHITE, assets, gameViewport, onGameScreen = true)
         }
-
-        // Reset the game over flag
-        isGameOver = false
 
         // Start the game music
         audioService.play(MusicAsset.WAVES_IN_FLIGHT)
@@ -123,7 +108,6 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
         when (gameEvent) {
             is GameEvent.PlayerDeathEvent -> {
                 logger.debug { "Game over with score ${gameEvent.score}" }
-                isGameOver = true
 
                 // Setup the game over screen
                 game.getScreen<GameOverScreen>().run {

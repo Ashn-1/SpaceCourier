@@ -13,7 +13,7 @@ import ktx.preferences.flush
 import ktx.preferences.set
 
 /**
- * TODO add docs
+ * Screen that is shown after the player died in the game. It shows the final score and whether or not the highscore was broken. The player can also restart from here.
  *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
@@ -24,14 +24,21 @@ class GameOverScreen(game: Xkay) : XkayScreen(game) {
 
     private val engine = game.engine
 
-    var score: Int = 0
-    var highscore: Int = 0
-
     private val ui = GameOverUI().apply {
         restartButton.onChangeEvent {
             restart()
         }
     }
+
+    /**
+     * Score of the currently ended game
+     */
+    var score: Int = 0
+
+    /**
+     * Highest ever score achieved
+     */
+    var highscore: Int = 0
 
     override fun show() {
         // Update highscore if neccessary
