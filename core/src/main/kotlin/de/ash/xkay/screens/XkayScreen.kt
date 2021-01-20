@@ -1,5 +1,8 @@
 package de.ash.xkay.screens
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import de.ash.xkay.main.Xkay
 import ktx.app.KtxScreen
 
@@ -20,5 +23,18 @@ open class XkayScreen(val game: Xkay) : KtxScreen {
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width, height, true)
         uiViewport.update(width, height, true)
+    }
+
+    protected fun isBackButtonPressed() : Boolean {
+        return when (Gdx.app.type) {
+            Application.ApplicationType.Android -> {
+                Gdx.input.isKeyJustPressed(Input.Keys.BACK)
+            }
+            Application.ApplicationType.Desktop -> {
+                Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            }
+            else -> false
+
+        }
     }
 }

@@ -86,20 +86,8 @@ class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
 
     override fun render(delta: Float) {
 
-        when (Gdx.app.type) {
-            Application.ApplicationType.Android -> {
-                if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-                    game.setScreen<MainMenuScreen>()
-                }
-            }
-            Application.ApplicationType.Desktop -> {
-                if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-                    game.setScreen<MainMenuScreen>()
-                }
-            }
-            else -> {
-                logger.error { "OS not supported" }
-            }
+        if (isBackButtonPressed()) {
+            game.setScreen<MainMenuScreen>()
         }
 
 

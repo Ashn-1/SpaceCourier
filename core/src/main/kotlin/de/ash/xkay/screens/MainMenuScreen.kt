@@ -53,8 +53,7 @@ class MainMenuScreen(game: Xkay) : XkayScreen(game)  {
 
     override fun render(delta: Float) {
         // Escape/Back was pressed
-        if (Gdx.app.type == Application.ApplicationType.Android && Gdx.input.isKeyJustPressed(Input.Keys.BACK)
-            || Gdx.app.type == Application.ApplicationType.Desktop && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (isBackButtonPressed()) {
             Gdx.app.exit()
         }
 

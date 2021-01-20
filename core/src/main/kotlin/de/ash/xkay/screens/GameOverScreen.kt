@@ -62,6 +62,10 @@ class GameOverScreen(game: Xkay) : XkayScreen(game) {
     }
 
     override fun render(delta: Float) {
+        if (isBackButtonPressed()) {
+            game.setScreen<MainMenuScreen>()
+        }
+
         engine.update(delta)
     }
 
