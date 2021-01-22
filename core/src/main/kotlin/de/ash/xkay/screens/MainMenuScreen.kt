@@ -15,6 +15,8 @@ import ktx.preferences.get
 import ktx.preferences.set
 
 /**
+ * Main menu of the game.
+ *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */

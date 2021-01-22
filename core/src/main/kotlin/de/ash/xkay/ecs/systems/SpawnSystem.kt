@@ -18,7 +18,7 @@ import ktx.assets.async.AssetStorage
 class SpawnSystem(
     private val assets: AssetStorage,
     private val gameViewport: Viewport,
-    interval: Float = 1.0f
+    interval: Float = 0.66f
 ) : IntervalSystem(interval) {
 
     override fun updateInterval() {

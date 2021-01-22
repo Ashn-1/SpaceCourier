@@ -14,12 +14,14 @@ import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.assets.async.AssetStorage
 
-/**
+/*
  * Contains presets for some entities as extension functions for [Engine].
  *
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
+
+private const val PLAYER_Y_VIEWPORT_PERCENT: Float = 0.33f
 
 fun Engine.createPlayer(
     assets: AssetStorage,
@@ -32,7 +34,10 @@ fun Engine.createPlayer(
         }
 
         val transform = with<TransformComponent> {
-            setInitialPosition(gameViewport.worldWidth * 0.5f, gameViewport.worldHeight * 0.33f)
+            setInitialPosition(
+                gameViewport.worldWidth * 0.5f,
+                gameViewport.worldHeight * PLAYER_Y_VIEWPORT_PERCENT
+            )
             size.set(graphic.sprite.width, graphic.sprite.height)
             depthLevel = 1
         }
@@ -91,6 +96,8 @@ fun Engine.createAsteroid(
     assets: AssetStorage,
     gameViewport: Viewport,
 ) : Entity {
+    val playerY = gameViewport.worldHeight * PLAYER_Y_VIEWPORT_PERCENT
+
     return entity {
 
         val graphic = with<GraphicComponent> {
@@ -111,6 +118,7 @@ fun Engine.createAsteroid(
         }
 
         with<VelocityComponent> {
+            velocity.x = MathUtils.random(-0.25f, 0.25f)
             velocity.y = MathUtils.random(-3f, -2f)
         }
 

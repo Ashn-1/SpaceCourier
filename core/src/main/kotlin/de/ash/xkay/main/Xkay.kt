@@ -24,12 +24,6 @@ import ktx.async.KtxAsync
 import ktx.log.debug
 import ktx.log.info
 
-/**
- * Main class of the application. It handles all the screens, resources, etc. of the game.
- *
- * @since 0.1
- * @author Cpt-Ash (Ahmad Haidari)
- */
 
 const val DEBUG = true
 const val UNIT_SCALE = 1 / 8f
@@ -38,6 +32,12 @@ const val GAME_SCREEN_HEIGHT = 16f
 const val UI_SCREEN_WIDTH = 144f
 const val UI_SCREEN_HEIGHT = 256f
 
+/**
+ * Main class of the application. It handles all the screens, resources, etc. of the game.
+ *
+ * @since 0.1
+ * @author Cpt-Ash (Ahmad Haidari)
+ */
 class Xkay : KtxGame<XkayScreen>() {
     
     private val logger = ashLogger("Main")
