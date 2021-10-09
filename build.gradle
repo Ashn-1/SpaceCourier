@@ -3,8 +3,8 @@ buildscript {
 		mavenLocal()
 		mavenCentral()
 		google()
+		gradlePluginPortal()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-		jcenter()
 	}
 	dependencies {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -27,15 +27,15 @@ configure(subprojects - project(':android')) {
 }
 
 subprojects {
-	version = '0.1'
-	ext.appName = 'xkay'
+	version = '0.0.1'
+	ext.appName = 'SpaceCourier'
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		gradlePluginPortal()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://jitpack.io' }
-		jcenter()
 	}
 }
 
-eclipse.project.name = 'xkay' + '-parent'
+eclipse.project.name = 'SpaceCourier' + '-parent'
