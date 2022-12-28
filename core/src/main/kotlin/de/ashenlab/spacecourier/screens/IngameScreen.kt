@@ -1,7 +1,7 @@
 package de.ashenlab.spacecourier.screens
 
 import ashutils.ktx.ashLogger
-import de.ashenlab.spacecourier.main.Xkay
+import de.ashenlab.spacecourier.Main
 import de.ashenlab.spacecourier.ecs.createPlayer
 import de.ashenlab.spacecourier.ecs.createStar
 import de.ashenlab.spacecourier.ecs.systems.SpawnSystem
@@ -23,7 +23,7 @@ import kotlin.math.min
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-class IngameScreen(game: Xkay) : XkayScreen(game), GameEventListener {
+class IngameScreen(game: Main) : XkayScreen(game), GameEventListener {
 
     private val logger = ashLogger("Ingame")
 

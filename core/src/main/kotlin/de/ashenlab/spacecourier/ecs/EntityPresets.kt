@@ -8,7 +8,7 @@ import de.ashenlab.spacecourier.assets.AtlasAnimationAsset
 import de.ashenlab.spacecourier.assets.AtlasAsset
 import de.ashenlab.spacecourier.assets.get
 import de.ashenlab.spacecourier.ecs.components.*
-import de.ashenlab.spacecourier.main.UNIT_SCALE
+import de.ashenlab.spacecourier.UNIT_SCALE
 import de.ashenlab.spacecourier.main.XkayRuntimeException
 import de.ashenlab.spacecourier.ecs.components.VelocityComponent
 import ktx.ashley.entity

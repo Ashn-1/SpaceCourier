@@ -3,14 +3,14 @@ package de.ashenlab.spacecourier.screens
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import de.ashenlab.spacecourier.main.Xkay
+import de.ashenlab.spacecourier.Main
 import ktx.app.KtxScreen
 
 /**
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-open class XkayScreen(val game: Xkay) : KtxScreen {
+open class XkayScreen(val game: Main) : KtxScreen {
     val assets = game.assets
     val batch = game.batch
     val gameViewport = game.gameViewport

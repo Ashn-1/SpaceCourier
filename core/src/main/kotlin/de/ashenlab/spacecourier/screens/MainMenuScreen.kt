@@ -3,7 +3,7 @@ package de.ashenlab.spacecourier.screens
 import ashutils.ktx.ashLogger
 import com.badlogic.gdx.Gdx
 import de.ashenlab.spacecourier.main.PreferenceKeys
-import de.ashenlab.spacecourier.main.Xkay
+import de.ashenlab.spacecourier.Main
 import de.ashenlab.spacecourier.ui.MainMenuUI
 import ktx.actors.onChangeEvent
 import ktx.actors.plusAssign
@@ -17,7 +17,7 @@ import ktx.preferences.set
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-class MainMenuScreen(game: Xkay) : XkayScreen(game)  {
+class MainMenuScreen(game: Main) : XkayScreen(game)  {
 
     private val logger = ashLogger("MainMenu")
 

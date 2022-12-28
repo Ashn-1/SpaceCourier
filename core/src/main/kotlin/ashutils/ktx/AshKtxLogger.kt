@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-class AshKtxLogger(tag: String) : Logger(tag.padEnd(MAX_TAG_CHARACTERS)) {
+class AshKtxLogger(val tag: String) : Logger(tag.padEnd(MAX_TAG_CHARACTERS)) {
     override val debugTag: String
         get() = "${timestampFormatter.format(Instant.now())} [DEBUG] [$tag]"
 

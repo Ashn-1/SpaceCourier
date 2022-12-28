@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Pool
-import de.ashenlab.spacecourier.main.UNIT_SCALE
+import de.ashenlab.spacecourier.UNIT_SCALE
 import ktx.ashley.mapperFor
 
 /**

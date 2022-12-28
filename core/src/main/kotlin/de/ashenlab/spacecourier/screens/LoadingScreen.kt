@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import de.ashenlab.spacecourier.main.PreferenceKeys
-import de.ashenlab.spacecourier.main.Xkay
+import de.ashenlab.spacecourier.Main
 import de.ashenlab.spacecourier.ui.LabelStyles
 import de.ashenlab.spacecourier.ui.createSkin
 import de.ashenlab.spacecourier.assets.*
@@ -31,7 +31,7 @@ import ktx.preferences.get
  * @since 0.1
  * @author Cpt-Ash (Ahmad Haidari)
  */
-class LoadingScreen(game: Xkay) : XkayScreen(game) {
+class LoadingScreen(game: Main) : XkayScreen(game) {
 
     private lateinit var progressBarTexture: Image
     private lateinit var progressBarLabel: Label
